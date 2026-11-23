@@ -67,10 +67,17 @@ async function chat(env, cfg, messages, timeoutMs = 60000) {
       body: JSON.stringify({ model: cfg.model, messages, temperature: 0.3 }),
     });
     const d = await r.json().catch(() => ({}));
-    if (!r.ok || d.error) throw new Error((d.error && d.error.message) || ('上游 HTTP ' + r.status));
+    if (!r.ok || d.error) {
+      // 上游原始错误（可能含 key 片段、额度信息）只进日志，不发给用户
+      console.error('upstream error', cfg.provider, cfg.model, r.status, String((d.error && d.error.message) || '').slice(0, 300));
+      throw new Error('AI 服务暂时繁忙，请稍后重试');
+    }
     return { text: d.choices?.[0]?.message?.content || '', model: d.model || cfg.model };
   } catch (e) {
-    throw new Error(e.name === 'AbortError' ? '超时' : String(e.message || e).slice(0, 200));
+    if (e.name === 'AbortError') throw new Error('AI 响应超时，请稍后重试');
+    if (e.message === 'AI 服务暂时繁忙，请稍后重试') throw e;
+    console.error('upstream fetch failed', cfg.provider, String(e.message || e).slice(0, 300));
+    throw new Error('AI 服务暂时繁忙，请稍后重试');
   } finally {
     clearTimeout(timer);
   }
