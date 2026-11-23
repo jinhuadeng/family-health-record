@@ -8,6 +8,19 @@
 
 > 只做记录和整理，不是医疗器械，不做诊断。胸痛、说话不清、一侧手脚无力、意识不清等紧急情况，请直接拨打 120。
 
+## 截图
+
+<table>
+<tr>
+<td align="center"><img src="docs/screenshots/home.jpg" width="200" alt="首页"><br>首页：按住说话就能记</td>
+<td align="center"><img src="docs/screenshots/organize.jpg" width="200" alt="自动整理"><br>一段话自动拆成多条记录</td>
+<td align="center"><img src="docs/screenshots/timeline.jpg" width="200" alt="病程时间线"><br>病程时间线</td>
+<td align="center"><img src="docs/screenshots/summary.jpg" width="200" alt="就医摘要"><br>一键生成就医摘要</td>
+</tr>
+</table>
+
+截图中的「妈妈（示例）」是虚构病人，资料都是编的。
+
 ## 特点
 
 - **资料默认只存在用户自己的浏览器里**，服务器不落库。
