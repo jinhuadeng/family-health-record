@@ -1,4 +1,6 @@
-# 家人健康簿
+# 家人健康簿 · Family Health Record
+
+**A free, privacy-first personal health record (PHR) for family caregivers.** Log blood pressure, blood glucose, meals, medications and symptoms by voice; snap photos of lab reports and medical records; get an auto-built illness timeline and a one-page summary to bring to the doctor. Data stays in your browser; optional multi-device sync is end-to-end encrypted. Includes `tools/medical-brief`, a script that turns a JSON file into a doctor-visit brief, illness timeline (PDF/Excel) and CGM (continuous glucose monitoring) summary. Chinese UI. Not a medical device.
 
 给照顾老人或病人的家属用的健康记录网页：说一句话就能记下每天的血压、血糖、饮食、用药和不舒服；拍照整理化验单和病历；自动排成病程时间线；看医生前一键生成就医摘要。
 
