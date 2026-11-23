@@ -1,0 +1,26 @@
+name = "family-health"
+main = "src/worker.js"
+compatibility_date = "2025-09-01"
+
+routes = [{ pattern = "health.xiaowen.ai", custom_domain = true }]
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+# 多设备同步（只存密文）
+[[d1_databases]]
+binding = "DB"
+database_name = "family-health-sync"
+database_id = "0792f717-a4b9-4d13-9b90-388d49778740"
+
+# 语音转文字（Whisper）
+[ai]
+binding = "AI"
+
+# 每个 IP 每分钟最多 40 次 AI 请求（一轮分析约 5 次）
+[[unsafe.bindings]]
+name = "LIMITER"
+type = "ratelimit"
+namespace_id = "7301"
+simple = { limit = 40, period = 60 }

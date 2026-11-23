@@ -1,0 +1,9 @@
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+node_modules
+.wrangler
+.claude/
+tools/medical-brief/out/
+tools/medical-brief/private/
+__pycache__/

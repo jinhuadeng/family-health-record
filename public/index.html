@@ -1,0 +1,1466 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>家人健康簿 - 给家里老人记病程、整理病历、准备看医生的免费工具</title>
+<meta name="description" content="家人健康簿是一个免费、免登录的家庭健康记录网页：说一句话就能记下血压、血糖、吃药和不舒服，拍照整理化验单和病历，自动排成病程时间线，看医生前一键生成就医摘要。资料只存在你自己的浏览器里，不替代医生诊断。">
+<link rel="canonical" href="https://health.xiaowen.ai/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="家人健康簿">
+<meta property="og:title" content="家人健康簿 - 给家里老人记病程、整理病历、准备看医生">
+<meta property="og:description" content="说一句话记下血压血糖和吃药，拍照整理化验单，自动排成病程时间线，看医生前一键生成就医摘要。免费、免登录，资料只存在你自己的浏览器。">
+<meta property="og:url" content="https://health.xiaowen.ai/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"家人健康簿","url":"https://health.xiaowen.ai/","applicationCategory":"HealthApplication","operatingSystem":"Web","inLanguage":"zh-CN","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"description":"给照顾家里老人、病人的家属用的健康记录网页：语音记每日情况（血压、血糖、用药、饮食、睡眠、不舒服），拍照识别化验单和病历，自动整理成病程时间线和就医摘要；资料默认只存在本机浏览器，可端到端加密同步到多台设备。仅作记录和整理，不替代医生诊断。","publisher":{"@type":"Organization","name":"宇华科技","url":"https://xiaowen.ai/"}}</script>
+<meta name="theme-color" content="#0f766e">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230f766e'/><path d='M32 48s-14-8.5-14-19a8 8 0 0 1 14-5 8 8 0 0 1 14 5c0 10.5-14 19-14 19z' fill='white'/></svg>">
+<style>
+:root{--bg:#f6f7f5;--card:#fff;--ink:#1c2321;--sub:#5d6764;--line:#e3e7e4;--pri:#0f766e;--pri2:#e6f3f1;--red:#c62828;--red2:#fdecec;--amb:#a15c00;--amb2:#fff4e0;--blue:#1d4ed8;--blue2:#e8eefc;--fs:16px}
+*{box-sizing:border-box}
+html{font-size:var(--fs)}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.6 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+body.big{--fs:20px}
+button,input,textarea,select{font:inherit;color:inherit}
+a{color:var(--pri)}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;gap:8px;padding:10px 0}
+.brand{font-weight:700;font-size:1.1rem;flex:1;display:flex;align-items:center;gap:6px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 12px;cursor:pointer;white-space:nowrap}
+.sos{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--red);color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:10px;margin-bottom:10px;font-size:1.05rem}
+.sos small{font-weight:400;opacity:.9}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs button{flex:1;border:0;background:none;padding:10px 0 12px;color:var(--sub);cursor:pointer}
+nav.tabs button.on{color:var(--pri);font-weight:700}
+h2{font-size:1.15rem;margin:18px 0 8px}
+h3{font-size:1rem;margin:14px 0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.entry{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;text-align:left}
+.entry b{display:block;font-size:1.05rem}
+.entry span{color:var(--sub);font-size:.9rem}
+.entry.u{border-color:#f3b4b4;background:var(--red2)}
+.entry.u b{color:var(--red)}
+.btn{border:0;border-radius:10px;padding:9px 16px;background:var(--pri);color:#fff;cursor:pointer;font-weight:600}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);font-weight:400}
+.btn.red{background:var(--red)}
+.btn.sm{padding:5px 10px;font-size:.9rem}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+textarea,input[type=text],input[type=number],input[type=date],select{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#fff}
+textarea{min-height:90px;resize:vertical}
+label.f{display:block;margin:8px 0 3px;color:var(--sub);font-size:.9rem}
+.muted{color:var(--sub);font-size:.9rem}
+.tag{display:inline-block;border-radius:6px;padding:1px 8px;font-size:.85rem;margin:2px 4px 2px 0;background:var(--pri2);color:var(--pri)}
+.tag.amb{background:var(--amb2);color:var(--amb)}
+.tag.red{background:var(--red2);color:var(--red)}
+.tag.blue{background:var(--blue2);color:var(--blue)}
+.tag.gray{background:#eef0ef;color:var(--sub)}
+.alert{border-radius:14px;padding:14px;margin:10px 0;background:var(--red2);border:1px solid #f3b4b4}
+.alert h3{color:var(--red);margin-top:0}
+.note{border-radius:10px;padding:10px 12px;background:var(--amb2);color:#6b4100;font-size:.9rem;margin:8px 0}
+.models{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.m{border:1px solid var(--line);border-radius:10px;padding:8px;font-size:.85rem;background:var(--card)}
+.m b{font-size:1rem}
+.m.ok{border-color:#9fd3cb}
+.m.err{border-color:#f3b4b4;background:var(--red2)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+td,th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top}
+ul{margin:4px 0;padding-left:20px}
+details{margin:8px 0}
+summary{cursor:pointer;color:var(--pri)}
+.item{display:flex;gap:8px;align-items:flex-start;border-bottom:1px dashed var(--line);padding:8px 0}
+.item:last-child{border-bottom:0}
+.item .grow{flex:1;min-width:0}
+.quote{font-size:.85rem;color:var(--sub);background:#f2f4f3;border-radius:6px;padding:2px 6px;margin-top:2px;word-break:break-all}
+.hide{display:none!important}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--card);width:100%;max-width:720px;border-radius:16px 16px 0 0;padding:16px;max-height:88vh;overflow:auto}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid #9fd3cb;border-top-color:var(--pri);border-radius:50%;animation:s 1s linear infinite;vertical-align:-1px}
+@keyframes s{to{transform:rotate(360deg)}}
+.qbox{border:2px solid var(--pri);border-radius:14px;padding:14px;margin:12px 0;background:var(--pri2)}
+.src{font-size:.78rem;border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
+.src.doc{background:var(--blue2);color:var(--blue)}.src.rule{background:var(--amb2);color:var(--amb)}.src.ai{background:#eef0ef;color:var(--sub)}
+.mic{width:88px;height:88px;border-radius:50%;border:0;background:var(--pri);color:#fff;font-size:34px;cursor:pointer;box-shadow:0 6px 18px rgba(15,118,110,.35);flex:none}
+.mic.rec{background:var(--red);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 14px rgba(198,40,40,.15)}}
+.voicecard{display:flex;gap:16px;align-items:center}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dcell{border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer;background:var(--card)}
+.dcell b{font-size:.9rem}.dcell .v{font-size:.95rem}.dcell.none .v{color:#a3aba8}
+.draft{border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:6px 0;display:flex;gap:8px;align-items:flex-start}
+.brand{white-space:nowrap;min-width:0}
+@media (max-width:520px){.brand span{display:none}.top .chip{padding:4px 9px}.models{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
+@media print{header,nav.tabs,.noprint{display:none!important}body{background:#fff;padding:0}.card{border:0;padding:0}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">❤ <span>家人健康簿</span></div>
+      <button class="chip" id="patBtn" onclick="openPatients()">…</button>
+      <button class="chip" id="syncChip" onclick="openSync()">☁ 同步</button>
+      <button class="chip" onclick="toggleBig()" title="大字模式">大字</button>
+    </div>
+    <a class="sos" href="tel:120">📞 拨打 120 <small>（会由手机确认后拨出）</small></a>
+  </div>
+</header>
+<main class="wrap" id="app">
+  <!-- 静态说明：给搜索引擎和 AI 读；页面脚本启动后会被替换成正常界面 -->
+  <section class="card">
+    <h1>家人健康簿：给家里老人记病程、整理病历、准备看医生</h1>
+    <p><b>这是什么：</b>一个免费、免登录的家庭健康记录网页。家里有人生病、要长期观察时，把每天的情况和医院的资料都放在一个地方，按时间排好。</p>
+    <p><b>给谁用：</b>照顾父母、老人或病人的家属，尤其是要陪看病、要向医生讲清楚「这几天怎么样」的人。</p>
+    <h2>怎么用</h2>
+    <ol>
+      <li><b>说一说：</b>按住说话，比如「早上血压 135/80，早饭后有点头晕」，自动拆成血压、饮食、不舒服等每日记录。</li>
+      <li><b>每日记录：</b>血压心率、血糖、三餐、大小便、睡眠、活动、用药（吃了/漏吃）、不舒服打分，也能加自己要观察的项目。</li>
+      <li><b>病程资料：</b>拍照上传化验单、检查报告、病历和医生意见，识别出关键数值，和每日记录一起排成病程时间线。</li>
+      <li><b>就医摘要：</b>看医生前一键生成一页摘要：主要问题、关键检查、用药和最近变化，方便几分钟讲清楚。</li>
+      <li><b>多设备同步：</b>用同步码在手机和电脑间同步，内容先在本机加密再上传，服务器只存密文。</li>
+    </ol>
+    <h2>隐私与边界</h2>
+    <p>资料默认只存在你自己的浏览器里，可随时导出备份或删除。本工具只做记录和整理，<b>不替代医生诊断</b>；遇到胸痛、说话不清、一侧无力、意识不清等紧急情况，请直接拨打 120。</p>
+    <p>由宇华科技制作。</p>
+  </section>
+</main>
+<nav class="tabs">
+  <button data-t="home" onclick="go('home')">首页</button>
+  <button data-t="obs" onclick="go('obs')">记录</button>
+  <button data-t="data" onclick="go('data')">病程资料</button>
+  <button data-t="sum" onclick="go('sum')">就医摘要</button>
+</nav>
+<div id="modal"></div>
+
+<script>
+// ============ 存储（只在本机浏览器：IndexedDB，图片单独存；旧版 localStorage 数据只读不删） ============
+const KEY = 'hb.v1';
+let S, DB = null;
+function idbOpen() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('hb', 1);
+    r.onupgradeneeded = () => { r.result.createObjectStore('kv'); r.result.createObjectStore('img'); };
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  });
+}
+function idbTx(store, mode, fn) {
+  return new Promise((res, rej) => {
+    const t = DB.transaction(store, mode); const req = fn(t.objectStore(store));
+    t.oncomplete = () => res(req && req.result); t.onerror = t.onabort = () => rej(t.error);
+  });
+}
+const idbGet = (s, k) => idbTx(s, 'readonly', st => st.get(k));
+const idbPut = (s, k, v) => idbTx(s, 'readwrite', st => st.put(v, k));
+const idbDel = (s, k) => idbTx(s, 'readwrite', st => st.delete(k));
+async function moveImgs(st) {
+  if (!DB) return;
+  for (const p of st.patients) for (const d of p.docs || []) if (d.img) { await idbPut('img', d.id, d.img); d.imgId = d.id; delete d.img; }
+}
+async function load() {
+  try { DB = await idbOpen(); S = await idbGet('kv', 'state'); } catch (e) { DB = null; S = null; }
+  if (!S || !S.patients) {
+    // 第一次用新版：从旧的 localStorage 复制过来；旧数据原样保留作备份
+    let old = null; try { old = JSON.parse(localStorage.getItem(KEY)); } catch (e) { }
+    if (old && old.patients) { S = old; if (DB) { await moveImgs(S); await idbPut('kv', 'state', S); } }
+  }
+  if (!S || !S.patients) S = { patients: [], cur: null };
+  if (!S.patients.length) { const p = newPatient('家人'); S.patients.push(p); S.cur = p.id; }
+  for (const p of S.patients) { for (const k of ['daily', 'events', 'todos', 'voice', 'customFields', 'watch']) p[k] = p[k] || []; }
+  if (!S.patients.find(p => p.id === S.cur)) S.cur = S.patients[0].id;
+  try { navigator.storage?.persist?.(); } catch (e) { }
+}
+function save() { stamp(); persist(); if (SY.code) { SY.dirty = true; saveSY(); syncSoon(); } }
+function persist() {
+  if (DB) { idbPut('kv', 'state', S).catch(e => alert('保存失败：' + (e?.message || e) + '。请先在「资料」里导出备份。')); return; }
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { alert('保存失败：浏览器存储已满。请先在「资料」里导出备份。'); }
+}
+function loadImgs() { if (DB) document.querySelectorAll('img[data-img]').forEach(async el => { el.src = (await idbGet('img', el.dataset.img).catch(() => '')) || ''; }); }
+async function storageInfo() {
+  const el = document.getElementById('usage'); if (!el || !navigator.storage?.estimate) return;
+  const e = await navigator.storage.estimate(); const mb = x => (x / 1048576).toFixed(1);
+  el.textContent = `已用 ${mb(e.usage || 0)} MB，可用约 ${e.quota > 1e10 ? '10 GB 以上' : mb(e.quota || 0) + ' MB'}。`;
+}
+function uid() { return Math.random().toString(36).slice(2, 9); }
+function now() { return new Date().toISOString(); }
+function today() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function fmt(t) { if (!t) return ''; const d = new Date(t); return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+function newPatient(name) { return { id: uid(), name, age: '', sex: '', history: '', meds: '', allergies: '', profileOrigin: '家属填写', docs: [], facts: [], notes: [], plans: [], cases: [], daily: [], events: [], todos: [], voice: [], customFields: [], watch: [], plansMigrated: true, seq: 0 }; }
+function P() { return S.patients.find(p => p.id === S.cur); }
+function nextNo(p, prefix) { p.seq = (p.seq || 0) + 1; return prefix + p.seq; }
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const arr = v => Array.isArray(v) ? v : (v ? [v] : []);
+
+// ============ 紧急规则（本地即时判断，不等模型） ============
+const DANGER = [
+  [/胸(口|部|前)?(痛|疼|闷|压|紧|憋)|心口(痛|疼|闷|压)|心前区/, '胸痛/胸闷'],
+  [/冷汗|大汗淋漓|浑身是汗/, '大汗/冷汗'],
+  [/呼吸困难|喘不上|喘不过|透不过气|上不来气|憋气|憋得慌|嘴唇(发紫|发青)|脸色发(紫|青)/, '呼吸困难/发绀'],
+  [/叫不醒|昏迷|意识不清|神志不清|晕倒|昏倒|晕过去|晕厥|没反应|不省人事/, '意识改变/晕厥'],
+  [/抽搐|抽风|癫痫发作|口吐白沫/, '抽搐'],
+  [/口角歪|嘴歪|说话不清|口齿不清|言语不清|说不出话|一侧.{0,4}(无力|麻木|发麻|动不了)|半边.{0,4}(无力|麻|动不了)|突然看不(清|见)/, '疑似卒中表现'],
+  [/大出血|血止不住|流了很多血|吐血|呕血|咳血|黑便|柏油样/, '出血'],
+  [/最严重的头痛|剧烈头痛|头痛欲裂|突然.{0,4}头(痛|疼)|头(痛|疼)得厉害/, '突发剧烈头痛'],
+  [/喉咙.{0,4}(肿|紧)|喉头水肿|全身.{0,4}(风团|起疹).{0,8}(呼吸|喘)/, '严重过敏'],
+  [/自杀|轻生|不想活|服毒|喝了农药|误服|吃了很多药|吞了/, '中毒/自伤风险'],
+  [/车祸|高处坠落|摔.{0,4}(头|昏|晕)|溺水|触电|大面积(烫|烧)伤/, '严重外伤/意外'],
+  [/心跳.{0,4}(停|没了|很快|很慢|特别快|乱)|摸不到脉/, '心跳异常'],
+  [/(体温|发烧|发热).{0,6}(4[1-2])/, '超高热'],
+];
+function dangerCheck(text) { const hits = []; for (const [re, name] of DANGER) if (re.test(text || '')) hits.push(name); return hits; }
+const RULE_NOTE = '规则来源：常见急症警示词（示例规则，尚未经临床审核）。不能排除未列出的危险情况，拿不准时直接拨 120。';
+
+function emergencyCard(hits, desc) {
+  return `<div class="alert"><h3>⚠ 可能需要立即处理</h3>
+    <div>识别到：${hits.map(h => `<span class="tag red">${esc(h)}</span>`).join('')}</div>
+    <ol>
+      <li><b>现在拨打 120</b>，说清：地址、谁、出了什么事、几点开始、现在清醒吗。</li>
+      <li>让病人保持安全体位，不要让其独自走动；不要自行喂药、喂水或进食（除非医生/调度员指导）。</li>
+      <li>记下开始时间；准备身份证/医保卡、正在吃的药。</li>
+      <li>去哪家医院由 120 调度和现场人员决定，这里不提供医院推荐。</li>
+    </ol>
+    <div class="row"><a class="btn red" href="tel:120">📞 拨打 120</a><button class="btn ghost" onclick="showHandover(${esc(JSON.stringify(desc || ''))})">打开交接摘要</button></div>
+    <div class="muted" style="margin-top:6px">${RULE_NOTE}</div></div>`;
+}
+
+// ============ 资料快照 ============
+function coverage(p) {
+  const missing = [];
+  if (!p.age) missing.push('年龄'); if (!p.history) missing.push('既往史'); if (!p.meds) missing.push('用药'); if (!p.allergies) missing.push('过敏史');
+  const dates = [...p.docs.map(d => d.date || d.addedAt), ...p.facts.map(f => f.date)].filter(Boolean).sort();
+  return { docs: p.docs.length, facts: p.facts.length, confirmed: p.facts.filter(f => f.status === '已核对').length, latest: dates.length ? dates[dates.length - 1].slice(0, 10) : '', missing };
+}
+function snapshot(p, opt = {}) {
+  const L = [];
+  L.push(`患者：${p.name}；年龄：${p.age || '未填'}；性别：${p.sex || '未填'}（来源：${p.profileOrigin}）`);
+  L.push(`[P1] 既往史：${p.history || '未填写（不代表没有）'}`);
+  L.push(`[P2] 正在用药：${p.meds || '未填写（不代表没有）'}`);
+  L.push(`[P3] 过敏史：${p.allergies || '未填写（不代表没有）'}`);
+  const docIds = opt.docIds;
+  const facts = p.facts.filter(f => !docIds || !f.docId || docIds.includes(f.docId));
+  const docs = p.docs.filter(d => !docIds || docIds.includes(d.id));
+  if (docs.length) { L.push('\n资料：'); docs.forEach(d => L.push(`[${d.no}] ${d.title}｜日期 ${d.date || '未知'}｜来源 ${d.source || '未知'}｜导入 ${d.addedAt.slice(0, 10)}`)); }
+  if (facts.length) {
+    L.push('\n关键项（状态：已核对 / 待核对 / 识别不清）：');
+    facts.forEach(f => L.push(`[${f.no}] ${f.kind}｜${f.name}：${f.value || ''}${f.unit || ''}${f.ref ? '（参考 ' + f.ref + '）' : ''}${f.flag ? ' ' + f.flag : ''}｜日期 ${f.date || '未知'}｜来源 ${f.origin}${f.docNo ? ' ' + f.docNo : ''}｜${f.status}`));
+  }
+  if (p.notes.length) { L.push('\n医生意见 / 家属转述：'); p.notes.forEach(n => L.push(`[${n.no}] ${n.origin}（${n.date || ''}）：${n.text}`)); }
+  if (opt.all) {
+    // 整合分析：带上家属在其他问题里的输入，不带 AI 结论，避免各模型被旧结论带偏
+    const others = p.cases.filter(c => !c.all);
+    if (others.length) {
+      L.push('\n家属之前提过的问题与回答（只含家属输入）：');
+      others.forEach((c, k) => { L.push(`[C${k + 1}] ${c.createdAt.slice(0, 10)} 问：${c.question}`); c.qa.forEach(x => L.push(`  追问：${x.q}｜答：${x.a}`)); });
+    }
+  }
+  const qa = (opt.qa || []);
+  if (qa.length) { L.push('\n本次追问记录：'); qa.forEach((x, i) => L.push(`[Q${i + 1}] 问：${x.q}｜答：${x.a}`)); }
+  for (const pl of opt.all ? (p.plansMigrated ? [] : p.plans) : opt.plan ? [opt.plan] : []) {
+    L.push(`\n观察计划「${pl.title}」（${pl.source}）开始 ${pl.start}，记录项：${pl.items.map(i => i.name).join('、')}`);
+    const days = daysBetween(pl.start, today()) + 1;
+    const logged = new Set(pl.logs.map(l => l.date));
+    L.push(`共 ${days} 天，有记录 ${logged.size} 天，缺失 ${Math.max(0, days - logged.size)} 天。`);
+    pl.logs.forEach(l => L.push(`${l.date}：${pl.items.map(i => i.name + '=' + (l.values[i.name] ?? '未记录')).join('；')}${l.note ? '；备注 ' + l.note : ''}`));
+  }
+  const w0 = W(p); if (w0) L.push(`\n观察重点：${w0.title}（${w0.start} 起；联系医生：${(w0.contact || []).join('；') || '未写'}；立即120：${(w0.urgent || []).join('；') || '未写'}；来源 ${w0.source}）`);
+  if (p.daily.length) { L.push(`\n每日记录（近 ${opt.days || 7} 天，家属记录）：`); dailySnapshot(p, opt.days || 7).forEach(x => L.push(x)); }
+  if (p.events.length) { L.push('\n家属随手记（症状/用药/就医/医生意见）：'); [...p.events].sort((a, b) => (a.date + a.at).localeCompare(b.date + b.at)).slice(-40).forEach(e => L.push(`${e.date} ${e.time || ''} [${e.type}] ${e.text}${e.uncertain ? '[待核对]' : ''}`)); }
+  const td = p.todos.filter(t => !t.done); if (td.length) { L.push('\n待办/复诊：'); td.forEach(t => L.push(`${t.text}${t.due ? '（' + t.due + '）' : ''}`)); }
+  const c = coverage(p);
+  L.push(`\n资料覆盖：${c.docs} 份资料、${c.facts} 个关键项（已核对 ${c.confirmed}），最近资料日期 ${c.latest || '无'}；缺失：${c.missing.join('、') || '无'}。系统只提供了以上资料，不代表已检索全部病史。`);
+  return { text: L.join('\n'), factIds: facts.map(f => f.id) };
+}
+function daysBetween(a, b) { return Math.round((new Date(b) - new Date(a)) / 864e5); }
+
+// ============ API ============
+let MODELS = { slots: { A: { provider: 'OpenAI', model: '' }, B: { provider: 'Anthropic', model: '' }, C: { provider: 'Google', model: '' }, D: { provider: 'DeepSeek', model: '' } } };
+fetch('/api/models').then(r => r.json()).then(d => MODELS = d).catch(() => { });
+async function api(path, body, signal) {
+  const r = await fetch('/api/' + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body), signal });
+  const d = await r.json().catch(() => ({ ok: false, error: '网络错误' }));
+  if (r.status === 429) d.error = d.error || '请求太频繁';
+  return d;
+}
+
+// ============ 路由 ============
+let view = 'home', arg = null;
+function go(v, a) { view = v; arg = a; render(); window.scrollTo(0, 0); }
+function render() {
+  const p = P();
+  document.getElementById('patBtn').textContent = '👤 ' + p.name + ' ▾';
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === (view === 'case' ? (caseById(arg)?.all ? 'data' : 'home') : view === 'ask' || view === 'urgent' ? 'home' : view === 'ep' ? 'data' : view)));
+  const el = document.getElementById('app');
+  el.innerHTML = ({ home: vHome, ask: vAsk, urgent: vUrgent, case: vCase, data: vData, obs: vObs, sum: vSum, ep: vData }[view] || vHome)(p);
+  if (view === 'case') afterCase();
+  loadImgs(); storageInfo();
+}
+
+// ============ 首页 ============
+const ENTRIES = {
+  urgent: ['马上处理', '突发不适，需要现在就知道怎么办'],
+  records: ['结合资料看', '有报告、病历或医生意见，想看懂'],
+  clarify: ['通过追问弄清', '说不清楚，或想把问题问明白'],
+  observe: ['持续观察', '需要连续几天记录，再看变化'],
+};
+function vHome(p) {
+  const cases = [...p.cases].reverse();
+  const c = coverage(p);
+  return `${voiceCard()}
+  <h2>遇到问题，从这里问</h2>
+  <div class="grid">
+    ${Object.entries(ENTRIES).map(([k, [t, d]]) => `<button class="entry ${k === 'urgent' ? 'u' : ''}" onclick="go('${k === 'urgent' ? 'urgent' : k === 'observe' ? 'obs' : 'ask'}','${k}')"><b>${t}</b><span>${d}</span></button>`).join('')}
+  </div>
+  <div class="card" style="border-color:var(--pri);cursor:pointer" onclick="go('data')"><b>病程与资料 →</b><div class="muted">${c.docs} 份报告 · 关键项 ${c.facts} 个（已核对 ${c.confirmed}）${c.latest ? ' · 最近 ' + c.latest : ''}。报告病历、医生意见、每日记录、提问都在一条时间线上，可一键整合分析。</div>
+  ${c.missing.length ? `<div class="muted" style="color:var(--amb)">基本信息还没填：${c.missing.join('、')}</div>` : ''}</div>
+  <h2>问过的问题</h2>
+  ${cases.length ? cases.map(cs => {
+    const v = cs.versions[cs.versions.length - 1]; const sy = v?.synth;
+    return `<div class="card" style="cursor:pointer" onclick="go('case','${cs.id}')"><div><span class="tag gray">${ENTRIES[cs.entry]?.[0] || ''}</span>${cs.stale ? '<span class="tag amb">资料已改，待更新</span>' : ''}<span class="muted">${fmt(cs.createdAt)} · ${cs.versions.length} 个版本</span></div>
+      <div style="font-weight:600">${esc(cs.question)}</div>${sy ? `<div>${tagsHtml(sy.tags)}</div><div class="muted">${esc((sy.headline || '').slice(0, 80))}</div>` : '<div class="muted">尚未完成分析</div>'}</div>`;
+  }).join('') : '<div class="muted">还没有。从上面四个入口任选一个开始，不需要按顺序。</div>'}
+  <p class="muted" style="margin-top:24px">本工具帮你整理资料、让多个 AI 模型各自分析并对照分歧。它不是医生，不能诊断、不能改处方；所有 AI 结论都需要医务人员确认。资料只保存在这台设备的浏览器里。</p>`;
+}
+function tagsHtml(tags) {
+  const cls = { '当前可回答': '', '需要补充': 'amb', '需要持续观察': 'blue', '需医务人员确认': 'red' };
+  return arr(tags).map(t => `<span class="tag ${cls[t] ?? 'gray'}">${esc(t)}</span>`).join('');
+}
+
+// ============ 马上处理 ============
+function vUrgent(p) {
+  return `<h2>马上处理</h2>
+  <div class="card"><b>先做这三件事</b><ol style="margin:6px 0">
+    <li>如果有胸痛、呼吸困难、叫不醒、口角歪斜、一侧手脚无力、大出血、抽搐——<b>直接拨 120</b>，不用等这里的分析。</li>
+    <li>记下症状开始的时间。</li>
+    <li>说说现在的情况，下面会立即生成一张交接摘要，给 120 或急诊医生看。</li></ol>
+    <a class="btn red" href="tel:120">📞 拨打 120</a></div>
+  <label class="f">现在怎么了？（可以用语音）</label>
+  <textarea id="uDesc" placeholder="例：爸爸 20 分钟前突然说胸口闷，出冷汗"></textarea>
+  <div class="row" style="margin-top:8px"><button class="btn ghost" onclick="voice('uDesc')">🎤 语音</button><button class="btn" onclick="urgentGo()">生成行动卡</button></div>
+  <div id="uOut"></div>`;
+}
+function urgentGo() {
+  const desc = document.getElementById('uDesc').value.trim();
+  if (!desc) return alert('请先简单描述情况');
+  const hits = dangerCheck(desc);
+  const out = document.getElementById('uOut');
+  out.innerHTML = (hits.length ? emergencyCard(hits, desc) : `<div class="card"><b>未识别到常见危险信号</b><div class="muted">${RULE_NOTE}</div>
+    <ul><li>症状加重、出现新的不适，或你拿不准时，拨 120 或去急诊。</li><li>可以继续下面的 AI 分析，帮你理清情况和该问医生的问题（约 10–40 秒）。</li></ul>
+    <div class="row"><button class="btn ghost" onclick="showHandover(${esc(JSON.stringify(desc))})">打开交接摘要</button></div></div>`)
+    + `<div class="card"><b>同时让 AI 帮忙看看？</b><div class="muted">后台分析，不影响你拨打 120。</div><button class="btn" style="margin-top:8px" onclick="startCase('urgent', ${esc(JSON.stringify(desc))})">开始 AI 分析</button></div>`;
+}
+function handoverText(p, desc) {
+  return `【交接摘要】${new Date().toLocaleString('zh-CN')}
+患者：${p.name}  ${p.sex || ''} ${p.age ? p.age + '岁' : ''}
+现在情况：${desc || '（未填写）'}
+既往史：${p.history || '未填写'}
+正在用药：${p.meds || '未填写'}
+过敏史：${p.allergies || '未填写'}
+${p.notes.filter(n => n.origin === '医生意见').slice(-3).map(n => '近期医生意见：' + n.text).join('\n')}
+（家属整理，供医务人员参考）`;
+}
+function showHandover(desc) {
+  const t = handoverText(P(), desc);
+  sheet(`<h3>交接摘要</h3><pre style="white-space:pre-wrap;font:inherit;font-size:1.05rem;background:#f6f7f5;border-radius:10px;padding:12px">${esc(t)}</pre>
+  <div class="row"><button class="btn" onclick="copy(${esc(JSON.stringify(t))})">复制</button><button class="btn ghost" onclick="closeSheet()">关闭</button></div>`);
+}
+
+// ============ 提问 ============
+function vAsk(p, entry) {
+  entry = arg || 'records';
+  const tips = { records: '例：这张血常规有什么问题？和上个月比有变化吗？', clarify: '例：妈妈最近总说头晕，不知道是怎么回事' };
+  return `<h2>${ENTRIES[entry][0]}</h2><p class="muted">${ENTRIES[entry][1]}</p>
+  <label class="f">你的问题</label><textarea id="q" placeholder="${tips[entry] || ''}"></textarea>
+  <div class="row" style="margin-top:6px"><button class="btn ghost sm" onclick="voice('q')">🎤 语音</button></div>
+  ${entry === 'records' ? `<label class="f">用哪些资料（不选=全部）</label>
+    ${p.docs.length ? p.docs.map(d => `<label class="row" style="margin:4px 0"><input type="checkbox" class="docsel" value="${d.id}"> ${esc(d.no)} ${esc(d.title)} <span class="muted">${esc(d.date || '')}</span></label>`).join('') : `<div class="note">还没有资料。可以先 <a href="#" onclick="go('data');return false">去添加报告</a>，也可以直接问——会说明缺什么。</div>`}` : ''}
+  <div style="margin-top:12px"><button class="btn" onclick="askGo('${entry}')">让 A B C D 四个模型分别分析</button></div>
+  <p class="muted">四个模型先各自独立作答，互不看答案；再由综合器交叉审阅、整理一致与分歧。</p>`;
+}
+function askGo(entry) {
+  const q = document.getElementById('q').value.trim();
+  if (!q) return alert('请先写下问题');
+  const docIds = [...document.querySelectorAll('.docsel:checked')].map(x => x.value);
+  startCase(entry, q, { docIds: docIds.length ? docIds : null });
+}
+
+// ============ 分析：独立 → 冻结 → 综合 ============
+const RUN = {};  // caseId -> {ctrl, slots:{A:{state,t0,res}}, synth}
+function startCase(entry, question, opt = {}) {
+  const p = P();
+  const hits = dangerCheck(question);
+  const cs = { id: uid(), entry, question, docIds: opt.docIds || null, planId: opt.planId || null, all: !!opt.all, days: opt.days || 7, qa: [], versions: [], createdAt: now(), danger: hits };
+  p.cases.push(cs); save();
+  go('case', cs.id);
+  runRound(cs);
+}
+function caseById(id) { return P().cases.find(c => c.id === id); }
+async function runRound(cs, onlySlots) {
+  const p = P();
+  const plan = cs.planId ? p.plans.find(x => x.id === cs.planId) : null;
+  const snap = snapshot(p, { docIds: cs.docIds, qa: cs.qa, plan, all: cs.all, days: cs.days });
+  let run = RUN[cs.id];
+  if (!onlySlots || !run) {
+    run = RUN[cs.id] = { ctrl: new AbortController(), slots: {}, snap, phase: 'indep', t0: Date.now() };
+    for (const s of 'ABCD') run.slots[s] = { state: 'wait' };
+  } else {
+    run.ctrl = new AbortController(); run.phase = 'indep';
+    onlySlots.forEach(s => run.slots[s] = { state: 'wait' });
+  }
+  const slots = onlySlots || ['A', 'B', 'C', 'D'];
+  paintRun(cs);
+  const tick = setInterval(() => paintRun(cs), 1000);
+  await Promise.all(slots.map(async s => {
+    try {
+      const r = await api('model', { slot: s, entry: cs.entry, question: cs.question, snapshot: run.snap.text }, run.ctrl.signal);
+      run.slots[s] = r.ok ? { state: 'ok', res: r } : { state: 'err', error: r.error, res: r };
+      if (r.ok && r.data?.urgent === 'now') run.urgent = r.data.urgent_reason || '模型 ' + s + ' 提示可能需要紧急处理';
+    } catch (e) { run.slots[s] = { state: 'err', error: e.name === 'AbortError' ? '已取消' : '网络错误' }; }
+    paintRun(cs);
+  }));
+  if (run.ctrl.signal.aborted) { clearInterval(tick); run.phase = 'cancel'; paintRun(cs); return; }
+  // 冻结独立答案后进入综合
+  const answers = Object.entries(run.slots).filter(([, v]) => v.state === 'ok').map(([k, v]) => ({ slot: k, provider: v.res.provider, model: v.res.model, data: v.res.data }));
+  if (!answers.length) { clearInterval(tick); run.phase = 'fail'; paintRun(cs); return; }
+  run.phase = 'synth'; paintRun(cs);
+  const prev = cs.versions.length ? cs.versions[cs.versions.length - 1].synth : null;
+  let sy;
+  try { sy = await api('synthesize', { entry: cs.entry, question: cs.question, snapshot: run.snap.text, answers, previous: prev }, run.ctrl.signal); }
+  catch (e) { sy = { ok: false, error: e.name === 'AbortError' ? '已取消' : '网络错误' }; }
+  clearInterval(tick);
+  const failed = Object.entries(run.slots).filter(([, v]) => v.state !== 'ok').map(([k, v]) => ({ slot: k, error: v.error }));
+  const ver = { v: cs.versions.length + 1, at: now(), factIds: run.snap.factIds, snapshot: run.snap.text, answers, failed, synth: sy.ok ? sy.data : null, synthError: sy.ok ? null : sy.error, synthModel: sy.model };
+  cs.versions.push(ver); cs.stale = null; save();
+  delete RUN[cs.id];
+  if (view === 'case' && arg === cs.id) render();
+}
+function cancelRun(id) { RUN[id]?.ctrl.abort(); }
+function paintRun(cs) {
+  const box = document.getElementById('runBox');
+  if (!box || arg !== cs.id) return;
+  const run = RUN[cs.id];
+  if (!run) { box.innerHTML = ''; return; }
+  const sec = Math.round((Date.now() - run.t0) / 1000);
+  box.innerHTML = `<div class="card"><div class="row" style="justify-content:space-between"><b>${run.phase === 'synth' ? '独立答案已冻结，综合器正在交叉审阅…' : run.phase === 'fail' ? '所有模型都没有返回' : run.phase === 'cancel' ? '已取消' : '四个模型正在各自独立分析…'}</b><span class="muted">${sec}s</span></div>
+  ${run.urgent ? `<div class="alert" style="margin:8px 0"><b style="color:var(--red)">模型提示可能需要紧急处理：</b>${esc(run.urgent)}<div class="row" style="margin-top:6px"><a class="btn red sm" href="tel:120">📞 拨打 120</a></div></div>` : ''}
+  <div class="models" style="margin-top:8px">${'ABCD'.split('').map(s => { const v = run.slots[s]; const m = MODELS.slots[s];
+    return `<div class="m ${v.state === 'ok' ? 'ok' : v.state === 'err' ? 'err' : ''}"><b>${s}</b> <span class="muted">${esc(m?.provider || '')}</span><br>${v.state === 'wait' ? '<span class="spin"></span> 分析中' : v.state === 'ok' ? '✓ 已完成' : '✗ 未完成：' + esc(v.error || '')}</div>`; }).join('')}</div>
+  <div class="row" style="margin-top:8px">${run.phase === 'indep' || run.phase === 'synth' ? `<button class="btn ghost sm" onclick="cancelRun('${cs.id}')">取消</button>` : `<button class="btn sm" onclick="runRound(caseById('${cs.id}'))">重试</button>`}</div></div>`;
+}
+
+// ============ 结果页 ============
+let verSel = {};
+function srcTag(s) { s = s || 'AI推断'; const c = /医嘱|医生/.test(s) ? 'doc' : /规则/.test(s) ? 'rule' : 'ai'; return `<span class="src ${c}">${esc(s)}</span>`; }
+function vCase(p) {
+  const cs = caseById(arg); if (!cs) return '<p>找不到这个问题</p>';
+  const n = cs.versions.length;
+  const vi = verSel[cs.id] ?? n - 1;
+  const v = cs.versions[vi];
+  const sy = v?.synth;
+  const stopped = n >= 3 && cs.versions[n - 1].synth?.no_new_info && cs.versions[n - 2].synth?.no_new_info;
+  let h = `<div class="row" style="margin-top:12px"><button class="btn ghost sm" onclick="go('home')">← 返回</button><span class="tag gray">${ENTRIES[cs.entry]?.[0]}</span></div>
+  <h2>${esc(cs.question)}</h2>`;
+  if (cs.danger?.length) h += emergencyCard(cs.danger, cs.question);
+  if (cs.stale) h += `<div class="note">⚠ ${esc(cs.stale)}——这一版结论可能已过时。<button class="btn sm" onclick="runRound(caseById('${cs.id}'))">按新资料重新分析</button></div>`;
+  h += `<div id="runBox"></div>`;
+  if (!v) return h;
+  if (n > 1) h += `<div class="row">版本：${cs.versions.map((x, i) => `<button class="chip ${i === vi ? '' : 'muted'}" style="${i === vi ? 'border-color:var(--pri);color:var(--pri)' : ''}" onclick="verSel['${cs.id}']=${i};render()">v${x.v} ${fmt(x.at)}</button>`).join('')}</div>`;
+  const ok = v.answers.length;
+  h += `<div class="muted" style="margin:6px 0">有效参与 ${ok}/4 个模型${v.failed.length ? '（' + v.failed.map(f => f.slot + ' 未完成').join('、') + '）' : ''} · 资料截至 ${esc(coverage(p).latest || '无资料')} · 综合器 ${esc(v.synthModel || '')}</div>`;
+  if (v.failed.length && vi === n - 1 && !RUN[cs.id]) h += `<button class="btn ghost sm" onclick="retryFailed('${cs.id}')">重试未完成的模型（${v.failed.map(f => f.slot).join('')}）</button>`;
+  if (!sy) {
+    h += `<div class="card"><b>综合未完成</b>：${esc(v.synthError || '')}<div class="muted">各模型的独立答案仍保留在下方。</div><button class="btn sm" style="margin-top:6px" onclick="runRound(caseById('${cs.id}'))">重新分析</button></div>`;
+  } else {
+    h += `<div class="card"><div>${tagsHtml(sy.tags)}</div><div style="font-size:1.08rem;margin:6px 0">${esc(sy.headline)}</div>
+      ${arr(sy.next_steps).length ? `<h3>下一步</h3><ul>${arr(sy.next_steps).map(s => `<li>${esc(s.text || s)}${srcTag(s.source)}</li>`).join('')}</ul>` : ''}</div>`;
+    if (arr(sy.changes).length || sy.unchanged_reason) h += `<div class="card"><h3 style="margin-top:0">判断变化</h3>${arr(sy.changes).map(c => `<div class="item"><div class="grow"><b>新增：</b>${esc(c.new_evidence)}<br><b>原：</b>${esc(c.before)} → <b>新：</b>${esc(c.after)}<div class="muted">原因：${esc(c.reason)}</div></div></div>`).join('')}${sy.unchanged_reason ? `<div class="muted">${esc(sy.unchanged_reason)}</div>` : ''}</div>`;
+    if (stopped) h += `<div class="note">连续两轮没有新增有效信息，已停止重复讨论。请把下面的「待核实清单」带去问医生。</div>`;
+    else if (sy.question?.q && vi === n - 1 && !RUN[cs.id]) h += `<div class="qbox"><b>只需回答一个问题</b><div style="margin:6px 0;font-size:1.05rem">${esc(sy.question.q)}</div><div class="muted">${esc(sy.question.why || '')}</div>
+      <div class="row" style="margin:8px 0">${arr(sy.question.options).map(o => `<button class="chip" onclick="document.getElementById('ans').value=this.textContent">${esc(o)}</button>`).join('')}</div>
+      <textarea id="ans" style="min-height:60px" placeholder="写下回答"></textarea>
+      <div class="row" style="margin-top:6px"><button class="btn" onclick="answer('${cs.id}')">提交，更新判断</button><button class="btn ghost sm" onclick="voice('ans')">🎤</button><button class="btn ghost sm" onclick="answer('${cs.id}','不知道')">不知道</button><button class="btn ghost sm" onclick="answer('${cs.id}','（跳过此问题）')">跳过</button><button class="btn ghost sm" onclick="go('data')">改为上传资料</button></div></div>`;
+    h += `<div class="card"><h3 style="margin-top:0">各模型怎么看</h3><table><tr><th>判断</th><th>支持</th><th>保留</th><th>无法判断</th></tr>${arr(sy.judgments).map(j => `<tr><td>${esc(j.claim)}${j.note ? `<div class="muted">${esc(j.note)}</div>` : ''}</td><td>${arr(j.support).join(' ')}</td><td>${arr(j.reserve).join(' ')}</td><td>${arr(j.cannot).join(' ')}</td></tr>`).join('')}</table>
+      <div class="muted" style="margin-top:6px">模型一致不等于判断正确，证据是否充分见下方。</div></div>`;
+    if (arr(sy.minority).length) h += `<div class="card"><h3 style="margin-top:0">少数意见（保留）</h3>${arr(sy.minority).map(m => `<div class="item"><span class="tag blue">${esc(m.model)}</span><div class="grow">${esc(m.view)}<div class="muted">理由：${esc(m.reason)}${m.question ? '｜可以补充：' + esc(m.question) : ''}</div></div></div>`).join('')}</div>`;
+    const ev = sy.evidence || {}, bd = sy.boundary || {};
+    h += `<div class="card"><h3 style="margin-top:0">证据与边界</h3>
+      <div>资料齐备：${esc(ev.complete || '—')}</div><div>来源核对：${esc(ev.verified || '—')}</div><div>时效：${esc(ev.timely || '—')}</div>
+      ${arr(ev.missing).length ? `<div>还缺：${arr(ev.missing).map(x => `<span class="tag amb">${esc(x)}</span>`).join('')}</div>` : ''}
+      ${arr(bd.leaning).length ? `<div style="margin-top:6px"><b>当前倾向</b>：${arr(bd.leaning).map(esc).join('；')}</div>` : ''}
+      ${arr(bd.rule_out).length ? `<div><b>需要排除</b>：${arr(bd.rule_out).map(esc).join('；')}</div>` : ''}
+      ${arr(bd.indistinguishable).length ? `<div><b>现有资料无法区分</b>：${arr(bd.indistinguishable).map(esc).join('；')}</div>` : ''}
+      ${arr(sy.conflicts).length ? `<div style="margin-top:6px"><b>冲突与假设差异</b><ul>${arr(sy.conflicts).map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}</div>`;
+    if (arr(sy.verify_list).length) h += `<div class="card"><h3 style="margin-top:0">待核实 / 待医生确认</h3><ul>${arr(sy.verify_list).map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>`;
+  }
+  h += `<div class="card"><h3 style="margin-top:0">四个模型的独立答案</h3><div class="muted">它们作答时互相看不到彼此的答案。都属于 AI 推断。</div>
+    ${v.answers.map(a => modelDetail(a)).join('')}${v.failed.map(f => `<details><summary>模型 ${f.slot}（${esc(MODELS.slots[f.slot]?.provider || '')}）— 未完成</summary><div class="muted">${esc(f.error || '')}</div></details>`).join('')}</div>`;
+  if (cs.qa.length) h += `<div class="card"><h3 style="margin-top:0">追问记录</h3>${cs.qa.map(x => `<div class="item"><div class="grow"><b>问：</b>${esc(x.q)}<br><b>答：</b>${esc(x.a)}</div></div>`).join('')}</div>`;
+  h += `<details><summary>查看本版本使用的资料快照</summary><pre style="white-space:pre-wrap;font-size:.85rem">${esc(v.snapshot)}</pre></details>
+  <div class="row noprint" style="margin:14px 0 30px"><button class="btn" onclick="go('sum')">生成就医摘要</button><button class="btn ghost" onclick="toObserve('${cs.id}')">转为持续观察</button><button class="btn ghost" onclick="delCase('${cs.id}')">删除</button></div>`;
+  return h;
+}
+function modelDetail(a) {
+  const d = a.data || {};
+  return `<details><summary>模型 ${a.slot} · ${esc(a.provider)} ${esc(a.model)}${d.urgent === 'now' ? ' <span class="tag red">提示紧急</span>' : ''}</summary>
+  <div>${esc(d.answer_now)}</div>
+  ${arr(d.explanations).map((e, i) => `<div class="item"><div class="grow"><b>${i + 1}. ${esc(e.name)}</b> <span class="tag gray">${esc(e.tendency)}</span><div class="muted">支持：${arr(e.support).map(esc).join('；') || '—'}</div><div class="muted">反对：${arr(e.against).map(esc).join('；') || '—'}</div></div></div>`).join('')}
+  ${arr(d.gaps).length ? `<div><b>信息缺口：</b>${arr(d.gaps).map(esc).join('；')}</div>` : ''}
+  ${arr(d.questions).length ? `<div><b>关键追问：</b>${arr(d.questions).map(q => esc(q.q)).join('；')}</div>` : ''}
+  ${d.next_step ? `<div><b>下一步：</b>${esc(d.next_step)}</div>` : ''}</details>`;
+}
+function afterCase() { const cs = caseById(arg); if (cs && RUN[cs.id]) paintRun(cs); }
+function retryFailed(id) {
+  // 重试失败模型：沿用同一快照重新跑这几个，合并成新版本
+  const cs = caseById(id); const v = cs.versions[cs.versions.length - 1];
+  const run = RUN[id] = { ctrl: new AbortController(), slots: {}, snap: { text: v.snapshot, factIds: v.factIds }, phase: 'indep', t0: Date.now() };
+  for (const a of v.answers) run.slots[a.slot] = { state: 'ok', res: { ok: true, provider: a.provider, model: a.model, data: a.data } };
+  const miss = v.failed.map(f => f.slot);
+  runRound(cs, miss);
+}
+function answer(id, val) {
+  const cs = caseById(id); const v = cs.versions[cs.versions.length - 1];
+  const a = val || document.getElementById('ans').value.trim();
+  if (!a) return alert('写下回答，或点「不知道」「跳过」');
+  if (dangerCheck(a).length) { cs.danger = [...new Set([...(cs.danger || []), ...dangerCheck(a)])]; }
+  cs.qa.push({ q: v.synth.question.q, a, at: now() }); save();
+  verSel[id] = undefined; delete verSel[id];
+  render(); runRound(cs);
+}
+function delCase(id) { if (!confirm('删除这个问题和它的所有版本？')) return; const p = P(); p.cases = p.cases.filter(c => c.id !== id); save(); go('home'); }
+
+// ============ 资料 ============
+function factRow(f, p) {
+  const st = { '已核对': '', '待核对': 'amb', '识别不清': 'red' }[f.status];
+  return `<div class="item"><div class="grow"><span class="tag gray">${esc(f.kind)}</span><b>${esc(f.name)}</b>：${esc(f.value)}${esc(f.unit || '')}${f.ref ? ` <span class="muted">参考 ${esc(f.ref)}</span>` : ''} ${f.flag ? `<span class="tag ${/高|低/.test(f.flag) ? 'amb' : 'gray'}">${esc(f.flag)}</span>` : ''}
+    <div class="muted">${esc(f.no)} · ${esc(f.date || '日期未知')} · ${esc(f.origin)}${f.docNo ? ' ' + esc(f.docNo) : ''} <span class="tag ${st}">${esc(f.status)}</span>${f.edited ? '<span class="tag gray">改过</span>' : ''}</div>
+    ${f.quote ? `<div class="quote">原文：${esc(f.quote)}</div>` : ''}</div>
+    <div class="row" style="flex-direction:column;gap:4px">${f.status !== '已核对' ? `<button class="btn sm" onclick="confirmFact('${f.id}')">核对无误</button>` : ''}<button class="btn ghost sm" onclick="editFact('${f.id}')">改</button></div></div>`;
+}
+function saveProfile() {
+  const p = P(); const old = JSON.stringify([p.history, p.meds, p.allergies, p.age, p.sex]);
+  p.name = val('pf_name') || p.name; p.age = val('pf_age'); p.sex = val('pf_sex'); p.history = val('pf_history'); p.meds = val('pf_meds'); p.allergies = val('pf_allergies'); p.profileOrigin = val('pf_origin');
+  if (old !== JSON.stringify([p.history, p.meds, p.allergies, p.age, p.sex])) markStale(p, null, '基本信息（既往史/用药/过敏）已修改');
+  save(); render(); toast('已保存');
+}
+const val = id => (document.getElementById(id)?.value || '').trim();
+let pendingImg = null;
+function pickImg(inp) {
+  const f = inp.files[0]; if (!f) return;
+  const img = new Image(); const url = URL.createObjectURL(f);
+  img.onload = () => { const k = Math.min(1, 1600 / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = img.width * k; c.height = img.height * k; c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); pendingImg = c.toDataURL('image/jpeg', .82); document.getElementById('imgName').textContent = '已选：' + f.name; URL.revokeObjectURL(url); };
+  img.src = url;
+}
+let draft = null;
+async function extract() {
+  const text = val('docText'); if (!text && !pendingImg) return alert('请拍照或粘贴文字');
+  const b = document.getElementById('exBtn'); b.disabled = true; b.innerHTML = '<span class="spin"></span> 正在识别（约 10–30 秒）';
+  const r = await api('extract', { text, image: pendingImg }).catch(() => ({ ok: false, error: '网络错误' }));
+  b.disabled = false; b.textContent = '提取关键项';
+  if (!r.ok) { document.getElementById('exOut').innerHTML = `<div class="note">识别失败：${esc(r.error)}。可以重试，或直接把文字粘贴进来。</div>`; return; }
+  const d = r.data || {};
+  draft = { title: d.title || '未命名资料', date: d.date || '', source: d.source || '', text: text || d.text || '', img: pendingImg, origin: val('docOrigin'), items: arr(d.items).map(it => ({ ...it, keep: true })) };
+  paintDraft();
+}
+function paintDraft() {
+  const d = draft;
+  document.getElementById('exOut').innerHTML = `<div class="card" style="border-color:var(--pri)"><b>请核对</b> <span class="muted">（识别不清的项默认标为「识别不清」，不会当作已确认事实）</span>
+    <div class="grid"><div><label class="f">标题</label><input type="text" value="${esc(d.title)}" oninput="draft.title=this.value"></div><div><label class="f">日期</label><input type="text" value="${esc(d.date)}" placeholder="YYYY-MM-DD" oninput="draft.date=this.value"></div></div>
+    ${d.items.map((it, i) => `<div class="item"><input type="checkbox" ${it.keep ? 'checked' : ''} onchange="draft.items[${i}].keep=this.checked"><div class="grow">
+      <div class="row" style="flex-wrap:nowrap"><input type="text" value="${esc(it.name)}" oninput="draft.items[${i}].name=this.value" style="flex:2"><input type="text" value="${esc(it.value)}" oninput="draft.items[${i}].value=this.value" style="flex:1.2;${it.clear === false ? 'border-color:var(--red)' : ''}"><input type="text" value="${esc(it.unit || '')}" oninput="draft.items[${i}].unit=this.value" style="flex:1"></div>
+      <div class="muted">${esc(it.kind)}${it.ref ? ' · 参考 ' + esc(it.ref) : ''}${it.flag ? ' · ' + esc(it.flag) : ''}${it.clear === false ? ' · <b style="color:var(--red)">看不清，请对照原件</b>' : ''}</div>
+      ${it.quote ? `<div class="quote">原文：${esc(it.quote)}</div>` : ''}</div></div>`).join('') || '<div class="muted">没有识别出关键项，仍可保存原文。</div>'}
+    <div class="row" style="margin-top:8px"><button class="btn" onclick="saveDraft(true)">核对无误，保存</button><button class="btn ghost" onclick="saveDraft(false)">先保存，稍后核对</button><button class="btn ghost" onclick="draft=null;document.getElementById('exOut').innerHTML=''">放弃</button></div></div>`;
+}
+function saveDraft(checked) {
+  const p = P(); const d = draft;
+  const doc = { id: uid(), no: nextNo(p, 'D'), title: d.title, date: d.date, source: d.source, text: d.text, origin: d.origin, addedAt: now() };
+  if (d.img) { if (DB) { idbPut('img', doc.id, d.img); doc.imgId = doc.id; } else doc.img = d.img; }
+  p.docs.push(doc);
+  for (const it of d.items.filter(x => x.keep)) {
+    p.facts.push({ id: uid(), no: nextNo(p, 'F'), docId: doc.id, docNo: doc.no, kind: it.kind || '其他', name: it.name, value: it.value, unit: it.unit, ref: it.ref, flag: it.flag, date: it.date || d.date, quote: it.quote, origin: d.origin, status: it.clear === false ? '识别不清' : checked ? '已核对' : '待核对' });
+  }
+  draft = null; pendingImg = null; save(); render(); toast('已保存 ' + doc.no);
+}
+function confirmFact(id) { const f = P().facts.find(x => x.id === id); f.status = '已核对'; save(); render(); if (document.getElementById('modal').innerHTML && f.docId) openDoc(f.docId); }
+function editFact(id) {
+  const f = P().facts.find(x => x.id === id);
+  sheet(`<h3>修改 ${esc(f.no)} ${esc(f.name)}</h3>
+  <label class="f">名称</label><input type="text" id="ef_name" value="${esc(f.name)}">
+  <div class="row" style="flex-wrap:nowrap"><div style="flex:2"><label class="f">值</label><input type="text" id="ef_value" value="${esc(f.value)}"></div><div style="flex:1"><label class="f">单位</label><input type="text" id="ef_unit" value="${esc(f.unit || '')}"></div></div>
+  <label class="f">日期</label><input type="text" id="ef_date" value="${esc(f.date || '')}">
+  ${f.quote ? `<div class="quote" style="margin-top:8px">原文：${esc(f.quote)}</div>` : ''}
+  <div class="row" style="margin-top:12px"><button class="btn" onclick="saveFact('${id}')">保存（标为已核对）</button><button class="btn ghost" style="color:var(--red)" onclick="delFact('${id}')">删除</button><button class="btn ghost" onclick="closeSheet()">取消</button></div>`);
+}
+function saveFact(id) {
+  const p = P(); const f = p.facts.find(x => x.id === id);
+  f.history = [...(f.history || []), { name: f.name, value: f.value, unit: f.unit, date: f.date, at: now() }];
+  f.name = val('ef_name'); f.value = val('ef_value'); f.unit = val('ef_unit'); f.date = val('ef_date'); f.status = '已核对'; f.edited = true;
+  markStale(p, id, `${f.no}（${f.name}）已修改`); save(); closeSheet(); render();
+}
+function delFact(id) { const p = P(); const f = p.facts.find(x => x.id === id); if (!confirm('删除 ' + f.no + '？')) return; p.facts = p.facts.filter(x => x.id !== id); markStale(p, id, f.no + ' 已删除'); save(); closeSheet(); render(); }
+function markStale(p, factId, why) {
+  for (const cs of p.cases) { const v = cs.versions[cs.versions.length - 1]; if (v && (!factId || v.factIds.includes(factId))) cs.stale = why; }
+}
+function delDoc(id) { const p = P(); if (!confirm('删除这份资料和它的关键项？')) return; const ids = p.facts.filter(f => f.docId === id).map(f => f.id); p.facts = p.facts.filter(f => f.docId !== id); p.docs = p.docs.filter(d => d.id !== id); if (DB) idbDel('img', id); ids.forEach(i => markStale(p, i, '有资料被删除')); save(); render(); }
+function addNote() { const p = P(); const t = val('nText'); if (!t) return; p.notes.push({ id: uid(), no: nextNo(p, 'N'), origin: val('nOrigin'), date: val('nDate'), text: t }); markStale(p, null, '新增了' + val('nOrigin')); save(); render(); }
+function delNote(id) { const p = P(); p.notes = p.notes.filter(n => n.id !== id); save(); render(); }
+
+// ============ 持续观察 ============
+function vObs(p) {
+  return `<h2>记录</h2>${voiceCard()}${remindCard(p)}${watchCard(p)}${dailySection(p)}${eventsCard(p, 20)}`;
+}
+async function draftPlan() {
+  const q = val('obsQ'); if (!q) return alert('先写想观察什么');
+  const b = document.getElementById('planBtn'); b.disabled = true; b.innerHTML = '<span class="spin"></span> 起草中';
+  const r = await api('plan', { question: q, snapshot: snapshot(P()).text }).catch(() => ({ ok: false, error: '网络错误' }));
+  b.disabled = false; b.textContent = '起草计划';
+  const d = r.ok ? r.data : { title: q.slice(0, 20), items: [{ name: '症状有无', how: '有/无' }], freq: '每天 1 次', review_days: 7, contact: [], urgent: [], source: 'AI建议，需医生确认' };
+  if (!r.ok) toast('AI 起草失败，已给出空白模板：' + r.error);
+  planDraft = { ...d, q, items: arr(d.items) };
+  document.getElementById('planOut').innerHTML = `<div class="card" style="border-color:var(--pri)">
+    <label class="f">标题</label><input type="text" value="${esc(d.title)}" oninput="planDraft.title=this.value">
+    <label class="f">记录项（每行：名称｜怎么记）</label><textarea id="pItems">${esc(planDraft.items.map(i => i.name + '｜' + i.how).join('\n'))}</textarea>
+    <div class="grid"><div><label class="f">频次</label><input type="text" value="${esc(d.freq)}" oninput="planDraft.freq=this.value"></div><div><label class="f">几天后复盘</label><input type="number" value="${esc(d.review_days || 7)}" oninput="planDraft.review_days=+this.value"></div></div>
+    <label class="f">出现这些应联系医务人员</label><textarea id="pContact" style="min-height:56px">${esc(arr(d.contact).join('\n'))}</textarea>
+    <label class="f">出现这些立即拨 120</label><textarea id="pUrgent" style="min-height:56px">${esc(arr(d.urgent).join('\n'))}</textarea>
+    <label class="f">阈值与频次来源</label><select id="pSrc"><option ${/医嘱/.test(d.source) ? 'selected' : ''}>医嘱</option><option ${/医嘱/.test(d.source) ? '' : 'selected'}>AI建议，需医生确认</option></select>
+    <div style="margin-top:8px"><button class="btn" onclick="savePlan()">开始观察</button></div></div>`;
+}
+let planDraft = null;
+function savePlan() {
+  const p = P(); const d = planDraft;
+  const items = val('pItems').split('\n').map(l => l.split(/[|｜]/)).filter(x => x[0].trim()).map(x => ({ name: x[0].trim(), how: (x[1] || '').trim() }));
+  p.plans.push({ id: uid(), title: d.title, q: d.q, items, freq: d.freq, review: d.review_days || 7, contact: val('pContact').split('\n').filter(Boolean), urgent: val('pUrgent').split('\n').filter(Boolean), source: val('pSrc'), start: today(), logs: [] });
+  planDraft = null; save(); arg = null; render(); toast('观察已开始，每天来记一下');
+}
+function planCard(pl) {
+  const days = daysBetween(pl.start, today()) + 1; const due = days > pl.review;
+  const logged = new Set(pl.logs.map(l => l.date));
+  const todayLog = pl.logs.find(l => l.date === today());
+  return `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(pl.title)}</b><span class="muted">第 ${days} 天 · 记了 ${logged.size} 天 · ${pl.review} 天复盘</span></div>
+  <div class="muted">频次：${esc(pl.freq)} ${srcTag(pl.source)}</div>
+  ${pl.contact.length ? `<div class="muted">联系医生：${pl.contact.map(esc).join('；')}</div>` : ''}
+  ${pl.urgent.length ? `<div class="muted" style="color:var(--red)">立即 120：${pl.urgent.map(esc).join('；')}</div>` : ''}
+  ${due ? '<div class="note">已到复盘时间，可以生成阶段总结。</div>' : ''}
+  <h3>今天的记录 ${todayLog ? '<span class="tag">已记</span>' : ''}</h3>
+  ${pl.items.map((it, i) => `<div style="margin:6px 0"><div>${esc(it.name)} <span class="muted">${esc(it.how)}</span></div>
+    <div class="row" style="flex-wrap:nowrap"><input type="text" id="lg_${pl.id}_${i}" value="${esc(todayLog?.values[it.name] ?? '')}" placeholder="数值或情况"><button class="btn ghost sm" onclick="document.getElementById('lg_${pl.id}_${i}').value='未发生'">没发生</button></div></div>`).join('')}
+  <input type="text" id="lg_${pl.id}_note" placeholder="备注（可选）" value="${esc(todayLog?.note || '')}">
+  <div class="muted" style="margin-top:4px">空着 = 没记录；“没发生” = 观察了但没有出现。两者不一样。</div>
+  <div class="row" style="margin-top:8px"><button class="btn sm" onclick="logToday('${pl.id}')">保存今天</button><button class="btn ghost sm" onclick="summarizePlan('${pl.id}')">生成阶段总结</button><button class="btn ghost sm" onclick="delPlan('${pl.id}')">结束并删除</button></div>
+  ${pl.logs.length ? `<details><summary>历史记录（${pl.logs.length}）</summary><table><tr><th>日期</th>${pl.items.map(i => `<th>${esc(i.name)}</th>`).join('')}</tr>${pl.logs.slice().sort((a, b) => b.date.localeCompare(a.date)).map(l => `<tr><td>${l.date.slice(5)}</td>${pl.items.map(i => `<td>${esc(l.values[i.name] ?? '—')}</td>`).join('')}</tr>`).join('')}</table></details>` : ''}</div>`;
+}
+function logToday(id) {
+  const p = P(); const pl = p.plans.find(x => x.id === id);
+  const values = {}; pl.items.forEach((it, i) => { const v = val(`lg_${id}_${i}`); if (v) values[it.name] = v; });
+  const note = val(`lg_${id}_note`);
+  pl.logs = pl.logs.filter(l => l.date !== today()); pl.logs.push({ date: today(), values, note, at: now() }); save();
+  const text = Object.values(values).join(' ') + ' ' + note;
+  const hits = dangerCheck(text);
+  const custom = pl.urgent.filter(u => u && text.includes(u.slice(0, 4)));
+  if (hits.length) { sheet(emergencyCard(hits, `${pl.title}：${text}`) + '<button class="btn ghost" onclick="closeSheet()">关闭</button>'); return; }
+  if (custom.length) toast('请注意：记录里可能出现了计划中“立即 120”的情况：' + custom.join('；'));
+  render(); toast('已记录');
+}
+function summarizePlan(id) { const pl = P().plans.find(x => x.id === id); startCase('observe', `阶段总结：${pl.title}（${pl.q}）。请总结趋势、反例、缺失天数和需要医生确认的问题。`, { planId: id }); }
+function delPlan(id) { if (!confirm('结束并删除这个观察？记录也会删除。')) return; const p = P(); p.plans = p.plans.filter(x => x.id !== id); save(); render(); }
+function toObserve(id) { const cs = caseById(id); go('obs', { q: cs.question }); }
+
+// ============ 每日记录（默认观察计划） ============
+const FIELDS = {
+  bp: { name: '血压心率', icon: '🩺' },
+  glucose: { name: '血糖', icon: '🩸' },
+  med: { name: '用药', icon: '💊' },
+  breakfast: { name: '早饭', icon: '🥣' },
+  lunch: { name: '午饭', icon: '🍚' },
+  dinner: { name: '晚饭', icon: '🍲' },
+  stool: { name: '大便', icon: '🚽' },
+  urine: { name: '小便', icon: '💧' },
+  sleep: { name: '睡眠', icon: '🌙' },
+  activity: { name: '活动', icon: '🚶' },
+  discomfort: { name: '不舒服', icon: '🤕' },
+  other: { name: '其他', icon: '📝' },
+};
+const FKEYS = Object.keys(FIELDS);
+function nowHM() { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+function nowStr() { const d = new Date(); return `${today()} ${nowHM()}（星期${'日一二三四五六'[d.getDay()]}）`; }
+function addDays(ds, n) { const d = new Date(ds + 'T12:00:00'); d.setDate(d.getDate() + n); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function fmtVal(f, v) {
+  v = v || {};
+  if (String(f).startsWith('c_')) return customFmt(v);
+  const n = x => x === 0 || (x !== null && x !== undefined && x !== '');
+  switch (f) {
+    case 'bp': return [n(v.sys) || n(v.dia) ? `${v.sys ?? '?'}/${v.dia ?? '?'}` : '', n(v.hr) ? `心率 ${v.hr}` : '', v.note || ''].filter(Boolean).join(' ');
+    case 'glucose': return [v.when || '', n(v.val) ? v.val : ''].filter(Boolean).join(' ');
+    case 'med': return [v.name || '', v.dose || '', v.taken && v.taken !== '已吃' ? '（' + v.taken + '）' : '', v.note || ''].filter(Boolean).join(' ');
+    case 'breakfast': case 'lunch': case 'dinner': return [v.amount || '', v.what || ''].filter(Boolean).join('：');
+    case 'stool': return [n(v.count) ? `${v.count} 次` : '', v.status || '', v.note || ''].filter(Boolean).join(' ');
+    case 'urine': case 'sleep': return [v.status || v.quality || '', n(v.wakes) ? `夜醒 ${v.wakes} 次` : '', v.note || ''].filter(Boolean).join(' ');
+    case 'activity': return v.note || '';
+    case 'discomfort': return [v.what || '', n(v.score) ? `${v.score}/10` : '', v.note || ''].filter(Boolean).join(' ');
+    case 'other': return v.note || '';
+  }
+  return '';
+}
+function dayEntries(p, date, f) { return p.daily.filter(e => e.date === date && (!f || e.field === f)).sort((a, b) => String(a.time).localeCompare(String(b.time))); }
+function entryLine(e) { return `${e.time ? esc(e.time) + ' ' : ''}${esc(fmtVal(e.field, e.value) || e.text || '')}${e.uncertain ? ' <span class="tag amb">待核对</span>' : ''}`; }
+
+let dDate = null;
+function dailySection(p, compact) {
+  const d = dDate || today();
+  const cells = allFields(p).map(f => {
+    const es = dayEntries(p, d, f);
+    return `<div class="dcell ${es.length ? '' : 'none'}" onclick="editDaily('${f}')"><b>${fdef(f, p).icon} ${esc(fdef(f, p).name)}</b>
+      <div class="v">${es.length ? es.map(e => `<div>${entryLine(e)}</div>`).join('') : '未记'}</div></div>`;
+  }).join('');
+  return `<div class="card"><div class="row" style="justify-content:space-between"><b>每日记录</b>
+    <div class="row"><button class="chip" onclick="dDate=addDays(dDate||today(),-1);render()">‹</button><span>${d === today() ? '今天' : d.slice(5)}</span><button class="chip" onclick="dDate=addDays(dDate||today(),1);render()" ${d >= today() ? 'disabled' : ''}>›</button></div></div>
+    <div class="muted" style="margin:4px 0 8px">点格子手动记；或者用上面的「说一说」，会自动填进来。灰色「未记」= 没有记录，不代表没发生。</div>
+    <div class="dgrid">${cells}</div>
+    ${compact ? '' : `<div style="margin-top:8px"><button class="btn ghost sm" onclick="manageFields()">＋ 加记录项 / 管理</button></div>` + week(p)}</div>`;
+}
+function week(p) {
+  const days = []; for (let i = 6; i >= 0; i--) days.push(addDays(today(), -i));
+  const cell = (d, f) => dayEntries(p, d, f).map(e => esc(fmtVal(f, e.value) || e.text || '')).join('<br>') || '<span class="muted">—</span>';
+  return `<details style="margin-top:10px"><summary>最近 7 天汇总</summary><div style="overflow-x:auto"><table><tr><th>日期</th>${allFields(p).map(f => `<th>${esc(fdef(f, p).name)}</th>`).join('')}</tr>
+    ${days.map(d => `<tr><td>${d.slice(5)}</td>${allFields(p).map(f => `<td>${cell(d, f)}</td>`).join('')}</tr>`).join('')}</table></div></details>`;
+}
+function fieldForm(f, v) {
+  v = v || {};
+  if (String(f).startsWith('c_')) { const c = fdef(f).custom; return c ? customForm(c, v) : `<input type="text" id="df_note" value="${esc(v.note ?? '')}">`; }
+  const num = (k, ph) => `<input type="number" inputmode="decimal" id="df_${k}" placeholder="${ph}" value="${esc(v[k] ?? '')}">`;
+  const pick = (k, opts) => `<select id="df_${k}"><option value=""></option>${opts.map(o => `<option ${v[k] === o ? 'selected' : ''}>${o}</option>`).join('')}</select>`;
+  const txt = (k, ph) => `<input type="text" id="df_${k}" placeholder="${ph}" value="${esc(v[k] ?? '')}">`;
+  switch (f) {
+    case 'bp': return `<div class="row" style="flex-wrap:nowrap">${num('sys', '高压')}${num('dia', '低压')}${num('hr', '心率')}</div>${txt('note', '备注，如躺着测/站起来测')}`;
+    case 'glucose': return `<div class="row" style="flex-wrap:nowrap">${pick('when', ['空腹', '餐前', '餐后2小时', '睡前', '随机'])}${num('val', 'mmol/L')}</div>`;
+    case 'med': { const kn = knownMeds(); return `<div class="muted">一种药记一条。</div>${kn.length ? `<div class="row" style="margin:6px 0">${kn.map(m => `<button type="button" class="chip" onclick="df_name.value=this.textContent">${esc(m)}</button>`).join('')}</div>` : ''}${txt('name', '药名，如 诺和龙、苯磺酸氨氯地平片')}<div class="row" style="flex-wrap:nowrap">${txt('dose', '剂量，如 1 片、半粒')}${pick('taken', ['已吃', '漏吃', '没吃'])}</div>${txt('note', '备注，如 饭后吃、医生让停')}`; }
+    case 'breakfast': case 'lunch': case 'dinner': return `${pick('amount', ['正常', '偏少', '没吃', '偏多'])}${txt('what', '吃了什么（可选）')}`;
+    case 'stool': return `<div class="row" style="flex-wrap:nowrap">${num('count', '次数（没有填 0）')}${pick('status', ['正常', '异常'])}</div>${txt('note', '如稀、黑、带血')}`;
+    case 'urine': return `${pick('status', ['正常', '异常'])}${txt('note', '如次数多、尿痛')}`;
+    case 'sleep': return `<div class="row" style="flex-wrap:nowrap">${pick('quality', ['好', '一般', '差'])}${num('wakes', '夜醒次数')}</div>${txt('note', '几点睡、几点醒、做梦等')}`;
+    case 'activity': return txt('note', '如扶着走了 10 分钟');
+    case 'other': return `<textarea id="df_note" style="min-height:70px" placeholder="归不进上面各项的，都可以写在这里">${esc(v.note ?? '')}</textarea>`;
+    case 'discomfort': return `${txt('what', '哪里不舒服，如头晕')}<label class="f">程度 0–10：<b id="scv">${esc(v.score ?? 5)}</b></label><input type="range" min="0" max="10" id="df_score" value="${esc(v.score ?? 5)}" oninput="scv.textContent=this.value" style="width:100%">${txt('note', '如坐起来加重')}`;
+  }
+}
+function readForm(f) {
+  const v = {}; document.querySelectorAll('[id^="df_"]').forEach(el => { const k = el.id.slice(3); let x = el.value.trim(); if (x === '') return; if (el.type === 'number' || el.type === 'range') x = Number(x); v[k] = x; });
+  return v;
+}
+function knownMeds() {
+  // 常用药快选：以前记过的药名 + 基本信息里填的用药
+  const p = P(); const set = new Set();
+  p.daily.filter(e => e.field === 'med' && e.value?.name).slice(-30).forEach(e => set.add(e.value.name));
+  String(p.meds || '').split(/[，,、；;\n]/).map(x => x.trim().replace(/[（(].*$/, '').replace(/\s*(早中晚|早晚|每日.*|一日.*)$/, '')).filter(x => x && x.length <= 14).forEach(x => set.add(x));
+  return [...set].slice(0, 8);
+}
+function editDaily(f, id) {
+  const p = P(); const e = id ? p.daily.find(x => x.id === id) : null; const d = dDate || today();
+  const list = dayEntries(p, d, f);
+  sheet(`<h3>${fdef(f, p).icon} ${esc(fdef(f, p).name)} · ${d === today() ? '今天' : d}</h3>
+    ${list.map(x => `<div class="item"><div class="grow">${entryLine(x)}${x.quote ? `<div class="quote">原话：${esc(x.quote)}</div>` : ''}</div><button class="btn ghost sm" onclick="editDaily('${f}','${x.id}')">改</button><button class="btn ghost sm" onclick="delDaily('${x.id}','${f}')">删</button></div>`).join('')}
+    <h3>${e ? '修改这一条' : '记一条'}</h3>
+    <label class="f">时间</label><input type="text" id="df__time" value="${esc(e ? e.time : nowHM())}" placeholder="如 08:30 或 午饭后">
+    ${fieldForm(f, e && e.value)}
+    <div class="row" style="margin-top:10px"><button class="btn" onclick="saveDaily('${f}','${e ? e.id : ''}')">保存</button><button class="btn ghost" onclick="closeSheet()">关闭</button></div>`);
+}
+function saveDaily(f, id) {
+  const p = P(); const time = val('df__time'); const v = readForm(f); delete v._time;
+  if (!Object.keys(v).length) return alert('还没填内容');
+  if (id) { const e = p.daily.find(x => x.id === id); e.value = v; e.time = time; e.uncertain = false; e.edited = now(); }
+  else p.daily.push({ id: uid(), date: dDate || today(), time, field: f, value: v, source: '手填', at: now() });
+  save(); closeSheet(); render(); if (!checkDanger(fmtVal(f, v))) watchAlert(fdef(f).name + ' ' + fmtVal(f, v));
+}
+function delDaily(id, f) { const p = P(); p.daily = p.daily.filter(x => x.id !== id); save(); editDaily(f); render(); }
+function checkDanger(text) { const hits = dangerCheck(text); if (hits.length) sheet(emergencyCard(hits, text) + '<button class="btn ghost" onclick="closeSheet()">关闭</button>'); return hits.length; }
+
+// ============ 自定义记录项 ============
+const KIND = { num: '数值', yn: '有/无', score: '0–10 分', text: '文字' };
+function fdef(f, p) {
+  if (FIELDS[f]) return FIELDS[f];
+  const c = ((p || P()).customFields || []).find(x => 'c_' + x.id === f);
+  return c ? { name: c.name, icon: '📌', custom: c } : { name: f.replace(/^c_/, ''), icon: '•' };
+}
+function allFields(p) { p = p || P(); return [...FKEYS, ...(p.customFields || []).map(c => 'c_' + c.id)]; }
+function hashId(s) { let h = 2166136261; for (const ch of s) { h ^= ch.codePointAt(0); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); }
+function customFmt(v) {
+  const n = x => x === 0 || (x !== null && x !== undefined && x !== '');
+  return [v.yn || '', n(v.val) ? v.val + (v.unit || '') : '', n(v.score) ? v.score + '/10' : '', v.note || ''].filter(Boolean).join(' ');
+}
+function customForm(c, v) {
+  const t = (k, ph) => `<input type="text" id="df_${k}" placeholder="${ph}" value="${esc(v[k] ?? '')}">`;
+  if (c.kind === 'num') return `<div class="row" style="flex-wrap:nowrap"><input type="number" inputmode="decimal" id="df_val" placeholder="数值" value="${esc(v.val ?? '')}"><span>${esc(c.unit || '')}</span></div>${t('note', '备注')}`;
+  if (c.kind === 'yn') return `<select id="df_yn"><option value=""></option>${['有', '无'].map(o => `<option ${v.yn === o ? 'selected' : ''}>${o}</option>`).join('')}</select>${t('note', '备注，如次数、程度')}`;
+  if (c.kind === 'score') return `<label class="f">程度 0–10：<b id="scv">${esc(v.score ?? 5)}</b></label><input type="range" min="0" max="10" id="df_score" value="${esc(v.score ?? 5)}" oninput="scv.textContent=this.value" style="width:100%">${t('note', '备注')}`;
+  return t('note', '写下情况');
+}
+function manageFields() {
+  const p = P();
+  sheet(`<h3>记录项</h3><div class="muted">默认 ${FKEYS.length} 项固定；下面可以加这段时间需要特别记的，比如体温、呕吐、腿肿。</div>
+    ${(p.customFields || []).map(c => `<div class="item"><div class="grow">📌 ${esc(c.name)} <span class="muted">${KIND[c.kind] || ''}${c.unit ? ' · ' + esc(c.unit) : ''}</span></div><button class="btn ghost sm" onclick="delField('${c.id}')">删</button></div>`).join('') || '<div class="muted" style="margin:8px 0">还没有自定义项。</div>'}
+    <h3>加一项</h3><input type="text" id="cfName" placeholder="名称，如 体温、呕吐恶心">
+    <div class="row" style="flex-wrap:nowrap;margin-top:6px"><select id="cfKind">${Object.entries(KIND).map(([k, t]) => `<option value="${k}">${t}</option>`).join('')}</select><input type="text" id="cfUnit" placeholder="单位（数值时填，如 ℃）"></div>
+    <div class="row" style="margin-top:10px"><button class="btn" onclick="addField()">加上</button><button class="btn ghost" onclick="closeSheet()">关闭</button></div>`);
+}
+function addField(name, kind, unit, silent, pp, fixedId) {
+  const p = pp || P(); name = (name ?? val('cfName')).trim(); if (!name) return;
+  p.customFields = p.customFields || [];
+  if (p.customFields.some(c => c.name === name)) { if (!silent) toast('已经有「' + name + '」了'); return p.customFields.find(c => c.name === name); }
+  const c = { id: fixedId || hashId(name + Date.now() + Math.random()), name, kind: kind ?? val('cfKind'), unit: unit ?? val('cfUnit') };
+  p.customFields.push(c);
+  if (!silent) { save(); manageFields(); render(); }
+  return c;
+}
+function delField(id) {
+  if (!confirm('删除这个记录项？已经记下的内容会保留在时间线里。')) return;
+  const p = P(); p.customFields = p.customFields.filter(c => c.id !== id); save(); manageFields(); render();
+}
+
+// ============ 观察重点（原专项观察的计划部分） ============
+function W(p) { return ((p || P()).watch || [])[0] || null; }
+function watchCard(p) {
+  const w = W(p);
+  if (!w) return `<div class="card"><div class="row" style="justify-content:space-between"><div><b>观察重点</b><div class="muted">可选：写下这段时间重点观察什么、哪天复盘、出现什么要联系医生或打 120。</div></div><button class="btn sm ghost" onclick="editWatch()">设置</button></div></div>`;
+  const days = daysBetween(w.start, today()) + 1, due = w.review && today() >= w.review;
+  return `<details class="card" ${due ? 'open' : ''}><summary><b>观察重点：${esc(w.title)}</b> <span class="muted">第 ${days} 天${w.review ? ' · ' + esc(w.review.slice(5)) + ' 复盘' : ''}</span></summary>
+    ${due ? '<div class="note">已到复盘日，可以生成阶段总结。</div>' : ''}
+    ${w.contact?.length ? `<div class="muted">联系医生：${w.contact.map(esc).join('；')}</div>` : ''}
+    ${w.urgent?.length ? `<div class="muted" style="color:var(--red)">立即 120：${w.urgent.map(esc).join('；')}</div>` : ''}
+    <div class="muted">${srcTag(w.source)}</div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" onclick="summarizeWatch()">生成阶段总结</button><button class="btn ghost sm" onclick="editWatch()">修改</button><button class="btn ghost sm" onclick="endWatch()">结束观察</button></div></details>`;
+}
+let watchDraft = null;
+function editWatch(d) {
+  const w = d || W() || { title: '', start: today(), review: addDays(today(), 7), contact: [], urgent: [], source: 'AI建议，需医生确认' };
+  sheet(`<h3>观察重点</h3>
+    <label class="f">观察什么</label><input type="text" id="wTitle" value="${esc(w.title)}" placeholder="如 头晕和血压、血糖的关系">
+    <div class="row" style="flex-wrap:nowrap"><div style="flex:1"><label class="f">开始</label><input type="date" id="wStart" value="${esc(w.start)}"></div><div style="flex:1"><label class="f">复盘日</label><input type="date" id="wReview" value="${esc(w.review || '')}"></div></div>
+    <label class="f">出现这些应联系医务人员（每行一条）</label><textarea id="wContact" style="min-height:56px">${esc((w.contact || []).join('\n'))}</textarea>
+    <label class="f">出现这些立即拨 120（每行一条）</label><textarea id="wUrgent" style="min-height:56px">${esc((w.urgent || []).join('\n'))}</textarea>
+    <label class="f">以上条件来自</label><select id="wSrc">${['医嘱', 'AI建议，需医生确认'].map(o => `<option ${w.source === o ? 'selected' : ''}>${o}</option>`).join('')}</select>
+    ${w.items?.length ? `<label class="f">建议加的记录项</label>${w.items.map((it, i) => `<label class="row" style="margin:3px 0"><input type="checkbox" class="wItem" data-i="${i}" ${allFields().some(f => fdef(f).name === it.name) ? 'disabled' : 'checked'}> ${esc(it.name)} <span class="muted">${esc(it.how || '')}</span></label>`).join('')}` : ''}
+    <div class="row" style="margin-top:10px"><button class="btn" onclick="saveWatch()">保存</button><button class="btn ghost" id="wAi" onclick="draftWatch()">让 AI 起草</button><button class="btn ghost" onclick="closeSheet()">取消</button></div>`);
+  watchDraft = w;
+}
+async function draftWatch() {
+  const q = val('wTitle'); if (!q) return alert('先写观察什么');
+  const b = document.getElementById('wAi'); b.disabled = true; b.innerHTML = '<span class="spin"></span> 起草中';
+  const r = await api('plan', { question: q, snapshot: snapshot(P()).text }).catch(() => ({ ok: false }));
+  if (!r.ok) { b.disabled = false; b.textContent = '让 AI 起草'; return toast('起草失败，可以手动填'); }
+  const d = r.data;
+  editWatch({ title: q, start: val('wStart') || today(), review: addDays(val('wStart') || today(), +d.review_days || 7), contact: arr(d.contact), urgent: arr(d.urgent), source: /医嘱/.test(d.source) ? '医嘱' : 'AI建议，需医生确认', items: arr(d.items) });
+}
+function saveWatch() {
+  const p = P(); const lines = id => val(id).split('\n').map(x => x.trim()).filter(Boolean);
+  const w = { id: W()?.id || uid(), title: val('wTitle') || '日常观察', start: val('wStart') || today(), review: val('wReview'), contact: lines('wContact'), urgent: lines('wUrgent'), source: val('wSrc') };
+  document.querySelectorAll('.wItem:checked').forEach(el => { const it = watchDraft.items[+el.dataset.i]; addField(it.name, /分/.test(it.how) ? 'score' : /有\/?无/.test(it.how) ? 'yn' : /[\d℃]|数值|mmol|次/.test(it.how) ? 'num' : 'text', (it.how.match(/℃|mmol\/L|次\/天|次/) || [''])[0], true); });
+  p.watch = [w]; save(); closeSheet(); render(); toast('已保存');
+}
+function endWatch() { if (!confirm('结束这次观察？记录都会保留。')) return; P().watch = []; save(); render(); }
+function summarizeWatch() {
+  const w = W(); const days = Math.min(30, Math.max(3, daysBetween(w.start, today()) + 1));
+  startCase('observe', `阶段总结：${w.title}（${w.start} 起 ${days} 天）。请根据每日记录总结趋势、反例、缺失天数，以及需要医生确认的问题。`, { days });
+}
+function watchAlert(text) {
+  // 记录里出现观察重点里写的「联系医生 / 立即 120」条件时提醒
+  const w = W(); if (!w || !text) return;
+  const hit = list => (list || []).filter(u => u && u.length >= 2 && text.includes(u.slice(0, Math.min(4, u.length))));
+  const u = hit(w.urgent), c = hit(w.contact);
+  if (u.length) sheet(emergencyCard(['观察重点里写的情况：' + u.join('；')], text) + '<button class="btn ghost" onclick="closeSheet()">关闭</button>');
+  else if (c.length) toast('请注意，可能出现了需要联系医生的情况：' + c.join('；'));
+}
+
+// ============ 旧「专项观察」数据迁移到每日记录（只增不删，id 固定，两台设备各自迁移也不会重复） ============
+function migratePlans(p) {
+  if (p.plansMigrated || !(p.plans || []).length) { p.plansMigrated = true; return; }
+  p.customFields = p.customFields || []; p.watch = p.watch || [];
+  const pl0 = p.plans[p.plans.length - 1];
+  if (!p.watch.length) p.watch.push({ id: 'w' + hashId(pl0.id), title: pl0.title, start: pl0.start, review: addDays(pl0.start, pl0.review || 7), contact: pl0.contact || [], urgent: pl0.urgent || [], source: pl0.source || 'AI建议，需医生确认', from: pl0.id });
+  const hm = t => { if (!t) return ''; const d = new Date(t); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+  const num = s => { const m = String(s).match(/-?\d+(\.\d+)?/); return m ? Number(m[0]) : null; };
+  const none = s => /^(没有|无|没|未发生|否|不|正常)/.test(String(s).trim());
+  for (const pl of p.plans) for (const l of pl.logs || []) {
+    const base = { date: l.date, time: hm(l.at), source: '观察迁移', at: l.at || now() };
+    pl.items.forEach((it, i) => {
+      const raw = l.values?.[it.name]; if (raw === undefined || raw === '') return;
+      const id = 'mg' + hashId(pl.id + l.date + it.name);
+      if (p.daily.some(e => e.id === id)) return;
+      let field, value;
+      if (/血糖/.test(it.name)) { field = 'glucose'; value = { val: num(raw), note: num(raw) === null ? raw : '' }; }
+      else if (/头晕|眩晕/.test(it.name)) { const sc = String(raw).match(/(?:^|[，,\s])(\d{1,2})(?:分)?(?=[，,\s]|$)/); field = 'discomfort'; value = { what: '头晕', score: sc && +sc[1] <= 10 ? +sc[1] : null, note: String(raw) }; }
+      else if (/腹泻|大便/.test(it.name)) { field = 'stool'; value = { note: it.name.replace(/[，,].*$/, '') + '：' + raw }; }
+      else {
+        const isNum = /体温|血压|心率|次数|mmol|℃/.test(it.name + it.how) && num(raw) !== null;
+        const c = addField(it.name.replace(/[，,].*$/, ''), isNum ? 'num' : none(raw) || /有\/?无/.test(it.how) ? 'yn' : 'text', /体温/.test(it.name) ? '℃' : '', true, p, hashId('mig' + it.name.replace(/[，,].*$/, '')));
+        field = 'c_' + c.id;
+        value = isNum ? { val: num(raw) } : c.kind === 'yn' ? { yn: none(raw) ? '无' : '有', note: none(raw) ? '' : String(raw) } : { note: String(raw) };
+      }
+      p.daily.push({ id, ...base, field, value, text: it.name + '：' + raw, quote: String(raw) });
+    });
+    if (l.note) { const id = 'mn' + hashId(pl.id + l.date + 'note'); if (!p.events.some(e => e.id === id)) p.events.push({ id, ...base, type: '其他', text: '观察备注：' + l.note, quote: l.note }); }
+  }
+  p.plansMigrated = true;
+}
+
+// ============ 提醒 ============
+function remindCard(p) {
+  const todos = p.todos.filter(t => !t.done).sort((a, b) => (a.due || '9').localeCompare(b.due || '9'));
+  const h = new Date().getHours();
+  const missing = [];
+  if (!dayEntries(p, today(), 'bp').length) missing.push('血压心率');
+  if (!dayEntries(p, today(), 'glucose').length) missing.push('血糖');
+  if (h >= 10 && !dayEntries(p, today(), 'med').length) missing.push('用药');
+  if (h >= 10 && !dayEntries(p, today(), 'breakfast').length) missing.push('早饭');
+  if (h >= 14 && !dayEntries(p, today(), 'lunch').length) missing.push('午饭');
+  if (h >= 20 && !dayEntries(p, today(), 'dinner').length) missing.push('晚饭');
+  if (h >= 10 && !dayEntries(p, today(), 'sleep').length) missing.push('昨晚睡眠');
+  const w = W(p), review = w && w.review && today() >= w.review;
+  if (!todos.length && !missing.length && !review) return '';
+  return `<div class="card"><b>提醒</b>
+    ${todos.map(t => { const over = t.due && t.due < today(), td = t.due === today();
+      return `<div class="item"><input type="checkbox" onchange="doneTodo('${t.id}')"><div class="grow">${esc(t.text)}${t.due ? ` <span class="tag ${over ? 'red' : td ? 'amb' : 'gray'}">${over ? '已过期 ' : td ? '今天 ' : ''}${esc(t.due)}</span>` : ''}</div><button class="btn ghost sm" onclick="delTodo('${t.id}')">删</button></div>`; }).join('')}
+    ${review ? `<div class="item"><div class="grow">观察「${esc(w.title)}」已到复盘日</div><button class="btn sm" onclick="summarizeWatch()">生成阶段总结</button></div>` : ''}
+    ${missing.length ? `<div class="muted" style="margin-top:6px">今天还没记：${missing.join('、')}</div>` : ''}
+    <div class="row" style="margin-top:6px"><input type="text" id="newTodo" placeholder="加一条提醒，如 11/5 耳鼻喉复诊"><input type="date" id="newTodoDue" style="width:auto"><button class="btn sm" onclick="addTodo()">加</button></div></div>`;
+}
+function addTodo() { const t = val('newTodo'); if (!t) return; P().todos.push({ id: uid(), text: t, due: val('newTodoDue'), done: false, createdAt: now(), source: '手填' }); save(); render(); }
+function doneTodo(id) { const t = P().todos.find(x => x.id === id); t.done = true; t.doneAt = now(); save(); render(); toast('已完成'); }
+function delTodo(id) { const p = P(); p.todos = p.todos.filter(x => x.id !== id); save(); render(); }
+
+// ============ 说一说：录音 → 转文字 → 整理 → 追问 → 确认保存 ============
+function voiceCard() {
+  return `<div class="card voicecard"><button class="mic" id="micBtn" onclick="startRec()" aria-label="说一说">🎤</button>
+    <div><b style="font-size:1.1rem">说一说</b><div class="muted">随时记：血压血糖、吃饭、大小便、睡眠、哪里不舒服、看病回来医生怎么说……说完自动整理。</div>
+    <a href="#" onclick="typeNote();return false">改用打字</a></div></div>`;
+}
+let REC = null;
+async function startRec() {
+  if (REC) return stopRec();
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) return typeNote('这个浏览器不支持录音，请打字，或用输入法的语音键。');
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); }
+  catch (e) { return typeNote(e && e.name === 'NotAllowedError' ? '没有麦克风权限：请在浏览器设置里允许使用麦克风。也可以先打字。' : '打不开麦克风，可以先打字。'); }
+  const mime = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'].find(t => MediaRecorder.isTypeSupported(t)) || '';
+  const rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+  const chunks = []; rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+  REC = { rec, stream, t0: Date.now(), cancel: false };
+  sheet(`<h3>正在听…</h3><div style="text-align:center;margin:10px 0"><button class="mic rec" onclick="stopRec()">■</button><div id="recT" class="muted" style="margin-top:8px">0:00</div></div>
+    <div class="muted">说完点红色按钮。最长 2 分钟。</div><div class="row" style="margin-top:10px"><button class="btn" onclick="stopRec()">说完了</button><button class="btn ghost" onclick="REC&&(REC.cancel=true);stopRec()">取消</button></div>`);
+  REC.timer = setInterval(() => { const s = Math.round((Date.now() - REC.t0) / 1000); const el = document.getElementById('recT'); if (el) el.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); if (s >= 120) stopRec(); }, 500);
+  rec.onstop = async () => {
+    const r = REC; REC = null; clearInterval(r.timer); r.stream.getTracks().forEach(t => t.stop());
+    if (r.cancel) return closeSheet();
+    const blob = new Blob(chunks, { type: rec.mimeType || mime || 'audio/webm' });
+    sheet('<h3><span class="spin"></span> 正在识别…</h3>');
+    try {
+      const res = await fetch('/api/transcribe', { method: 'POST', headers: { 'content-type': blob.type }, body: blob });
+      const j = await res.json().catch(() => ({}));
+      if (!j.ok) throw new Error(j.error || '识别失败');
+      beginOrganize(j.text, '语音');
+    } catch (e) { typeNote('语音识别没成功（' + e.message + '），可以打字，或再录一次。'); }
+  };
+  rec.start(1000);
+}
+function stopRec() { if (REC && REC.rec.state !== 'inactive') REC.rec.stop(); }
+function typeNote(msg) {
+  sheet(`<h3>记一笔</h3>${msg ? `<div class="note">${esc(msg)}</div>` : ''}
+    <textarea id="noteText" placeholder="例：今天早上血压 135/80，心率 72，空腹血糖 8.9。早饭吃了一碗粥。下午去北医三院耳鼻喉，医生说是耳石症，复位了一次，一周后复查。"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn" onclick="val('noteText')&&beginOrganize(val('noteText'),'打字')">整理</button><button class="btn ghost" onclick="closeSheet()">取消</button></div>`);
+}
+let NOTE = null;
+function beginOrganize(text, source) {
+  NOTE = { text, source, asked: [], at: now() };
+  const p = P(); p.voice.push({ id: uid(), at: NOTE.at, text, source }); save();
+  runOrganize();
+}
+async function runOrganize() {
+  const p = P();
+  const hits = dangerCheck(NOTE.text);
+  sheet(`${hits.length ? emergencyCard(hits, NOTE.text) : ''}<h3><span class="spin"></span> 正在整理…</h3><div class="quote">${esc(NOTE.text)}</div>`);
+  const profile = `${p.name}，${p.sex || ''} ${p.age ? p.age + '岁' : ''}；既往史：${p.history || '未填'}；用药：${p.meds || '未填'}；过敏：${p.allergies || '未填'}`;
+  const r = await api('organize', { text: NOTE.text, now: nowStr(), profile, asked: NOTE.asked.map(x => x.q), custom: (p.customFields || []).map(c => ({ key: 'c_' + c.id, name: c.name, kind: c.kind, unit: c.unit })) }).catch(() => ({ ok: false, error: '网络错误' }));
+  if (!r.ok) {
+    sheet(`<h3>整理没成功</h3><div class="muted">${esc(r.error || '')}</div><div class="quote">${esc(NOTE.text)}</div>
+      <div class="row" style="margin-top:8px"><button class="btn" onclick="runOrganize()">重试</button><button class="btn ghost" onclick="saveRaw()">先原样存为一条记录</button></div>`);
+    return;
+  }
+  NOTE.draft = r.data || {};
+  NOTE.items = arr(NOTE.draft.items).map(it => ({ ...it, keep: true }));
+  paintNote(hits);
+}
+const EV_TYPES = ['症状', '用药', '就医', '检查', '医生意见', '其他'];
+function draftLabel(it) {
+  if (it.kind === 'daily') return `<span class="tag">${fdef(it.field).icon} ${esc(fdef(it.field).name)}</span>`;
+  if (it.kind === 'todo') return '<span class="tag amb">提醒</span>';
+  return `<span class="tag ${it.type === '医生意见' ? 'blue' : 'gray'}">${esc(it.type || '记录')}</span>`;
+}
+function ruleQuestion(items) {
+  // 模型没问时，按固定规则补一个关键问题
+  const askedQ = NOTE.asked.map(x => x.q).join('|');
+  const has = n => n === 0 || (n !== null && n !== undefined && n !== '');
+  const cands = [];
+  const bp = items.find(it => it.kind === 'daily' && it.field === 'bp');
+  if (bp && !(has(bp.value?.sys) && has(bp.value?.dia))) cands.push({ q: '血压具体是多少？高压、低压和心率分别是几？', why: '只写「正常」，医生没法比较前后变化。' });
+  const gl = items.find(it => it.kind === 'daily' && it.field === 'glucose');
+  if (gl && !has(gl.value?.val)) cands.push({ q: '血糖具体是多少？是空腹还是餐后测的？', why: '要具体数值才能看出趋势。' });
+  if (items.some(it => it.type === '就医') && !items.some(it => it.type === '医生意见')) cands.push({ q: '医生怎么说？诊断、开了什么药、什么时候复诊？', why: '医生的结论是最重要的记录。' });
+  const dc = items.find(it => it.kind === 'daily' && it.field === 'discomfort');
+  if (dc && !has(dc.value?.score)) cands.push({ q: `${dc.value?.what || '不舒服'}现在几分？0 分不难受，10 分最难受。`, why: '用分数记录，前后几天才好比较。' });
+  return cands.find(c => !askedQ.includes(c.q.slice(0, 6))) || null;
+}
+function paintNote(hits) {
+  const d = NOTE.draft;
+  const q = NOTE.asked.length >= 2 ? null : (d.question && d.question.q ? d.question : ruleQuestion(NOTE.items));
+  if (q) d.question = q;
+  const danger = (hits && hits.length) || d.danger;
+  sheet(`${danger ? emergencyCard(hits && hits.length ? hits : ['模型提示：' + (d.danger_reason || '可能需要紧急处理')], NOTE.text) : ''}
+    <h3>整理好了，确认一下</h3><div class="muted">不对的取消勾选；数值不对，保存后可以在「记录」里点开修改。</div>
+    ${NOTE.items.map((it, i) => `<label class="draft"><input type="checkbox" ${it.keep ? 'checked' : ''} onchange="NOTE.items[${i}].keep=this.checked"><div class="grow">
+      ${draftLabel(it)}<span class="muted">${esc([it.date && it.date !== today() ? it.date.slice(5) : '', it.time || '', it.due ? '截止 ' + it.due : ''].filter(Boolean).join(' '))}</span>${it.uncertain ? '<span class="tag amb">待核对</span>' : ''}
+      <div>${esc(it.kind === 'daily' ? (fmtVal(it.field, it.value) || it.text) : it.text)}</div>${it.quote ? `<div class="quote">原话：${esc(it.quote)}</div>` : ''}</div></label>`).join('') || '<div class="muted">没整理出条目，可以原样保存。</div>'}
+    ${q ? `<div class="qbox"><b>补充一个问题（可跳过）</b><div style="margin:4px 0">${esc(q.q)}</div><div class="muted">${esc(q.why || '')}</div>
+      <textarea id="noteAns" style="min-height:50px" placeholder="打字回答"></textarea>
+      <div class="row" style="margin-top:6px"><button class="btn sm" onclick="answerNote()">回答并重新整理</button><button class="btn ghost sm" onclick="voice('noteAns')">🎤</button><button class="btn ghost sm" onclick="NOTE.asked.push({q:${esc(JSON.stringify(q.q))},a:'（跳过）'});NOTE.draft.question=null;paintNote()">跳过</button></div></div>` : ''}
+    <div class="row" style="margin-top:10px"><button class="btn" onclick="commitNote()">全部保存</button><button class="btn ghost" onclick="saveRaw()">只存原话</button><button class="btn ghost" onclick="closeSheet()">放弃</button></div>`);
+}
+function answerNote() {
+  const a = val('noteAns'); if (!a) return;
+  const q = NOTE.draft.question.q;
+  NOTE.asked.push({ q, a }); NOTE.text += `\n（补充，回答「${q}」）${a}`;
+  runOrganize();
+}
+function commitNote() {
+  const p = P(); let n = 0;
+  for (const it of NOTE.items.filter(x => x.keep)) {
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(it.date || '') ? it.date : today();
+    const base = { id: uid(), date, time: it.time || '', quote: it.quote || '', uncertain: !!it.uncertain, source: NOTE.source, at: now() };
+    if (it.kind === 'daily' && allFields(p).includes(it.field)) p.daily.push({ ...base, field: it.field, value: it.value || {}, text: it.text || '' });
+    else if (it.kind === 'todo') p.todos.push({ id: base.id, text: it.text, due: /^\d{4}-\d{2}-\d{2}$/.test(it.due || '') ? it.due : '', done: false, createdAt: base.at, source: NOTE.source, quote: it.quote || '' });
+    else if (!EV_TYPES.includes(it.type) || it.type === '其他' || it.kind === 'daily') {
+      // 归不进任何一项的，放进每日记录「其他」
+      p.daily.push({ ...base, field: 'other', value: { note: it.kind === 'daily' ? (fmtVal(it.field, it.value) || it.text || '') : (it.text || '') }, text: it.text || '' });
+    } else {
+      p.events.push({ ...base, type: it.type, text: it.text || '' });
+      if (it.type === '医生意见') p.notes.push({ id: uid(), no: nextNo(p, 'N'), origin: '医生意见', date, text: it.text, source: NOTE.source });
+    }
+    n++;
+  }
+  if (n) markStale(p, null, '新增了随手记');
+  const said = NOTE.text; NOTE = null; save(); closeSheet(); render(); toast(`已保存 ${n} 条`); watchAlert(said);
+}
+function moveOtherEvents(p) {
+  // 以前记成「其他」类随手记的，搬进每日记录「其他」（id 固定，两台设备各自搬也不重复）
+  const olds = p.events.filter(e => e.type === '其他');
+  for (const e of olds) if (!p.daily.some(d => d.id === 'o' + e.id)) p.daily.push({ id: 'o' + e.id, date: e.date, time: e.time || '', field: 'other', value: { note: e.text }, text: e.text, quote: e.quote || '', source: e.source || '', at: e.at || now() });
+  if (olds.length) p.events = p.events.filter(e => e.type !== '其他');
+  return olds.length;
+}
+function saveRaw() {
+  const p = P(); p.daily.push({ id: uid(), date: today(), time: nowHM(), field: 'other', value: { note: NOTE.text }, text: NOTE.text, quote: '', source: NOTE.source, at: now(), raw: true });
+  NOTE = null; save(); closeSheet(); render(); toast('已原样保存');
+}
+function eventsCard(p, n) {
+  const ev = [...p.events].sort((a, b) => (b.date + b.at).localeCompare(a.date + a.at)).slice(0, n);
+  if (!ev.length) return '';
+  return `<div class="card"><b>最近的记录</b>${ev.map(e => `<div class="item"><span class="tag ${e.type === '医生意见' ? 'blue' : 'gray'}">${esc(e.type)}</span><div class="grow">${esc(e.text)}<div class="muted">${esc(e.date.slice(5))} ${esc(e.time || '')} · ${esc(e.source || '')}${e.uncertain ? ' · 待核对' : ''}</div></div><button class="btn ghost sm" onclick="delEvent('${e.id}')">删</button></div>`).join('')}</div>`;
+}
+function delEvent(id) { if (!confirm('删除这条记录？')) return; const p = P(); p.events = p.events.filter(x => x.id !== id); save(); render(); }
+function dailySnapshot(p, days) {
+  const L = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = addDays(today(), -i); const es = dayEntries(p, d);
+    if (es.length) L.push(`${d}：` + es.map(e => `${fdef(e.field, p).name}${e.time ? '(' + e.time + ')' : ''} ${fmtVal(e.field, e.value) || e.text}${e.uncertain ? '[待核对]' : ''}`).join('；'));
+    else L.push(`${d}：无记录`);
+  }
+  return L;
+}
+
+// ============ 本次病程：所有输入合成一条时间线 + 整合分析 ============
+// ============ 病程与资料（原「本次病程」+「资料」合并） ============
+const EP_Q = '综合目前所有资料、问答和观察记录：整体情况怎么样？哪些判断有变化？下一步该做什么？要问医生什么？';
+const TL_F = { all: '全部', doc: '报告检查', doctor: '医生意见', daily: '每日记录', ask: '提问分析' };
+let tlF = 'all';
+function timelineEvents(p) {
+  const ev = [];
+  p.docs.forEach(d => ev.push({ g: 'doc', t: d.date || d.addedAt, k: '资料', c: 'blue', h: `${esc(d.no)} ${esc(d.title)}`, sub: `${p.facts.filter(f => f.docId === d.id).length} 个关键项 · ${esc(d.origin)}`, go: `openDoc('${d.id}')` }));
+  p.notes.forEach(n => ev.push({ g: n.origin === '医生意见' ? 'doctor' : 'daily', t: n.date, k: n.origin, c: n.origin === '医生意见' ? 'blue' : 'gray', h: esc(n.text), go: '' }));
+  p.cases.filter(c => !c.all).forEach(c => {
+    const sy = [...c.versions].reverse().find(v => v.synth)?.synth;
+    ev.push({ g: 'ask', t: c.createdAt, k: '提问', c: '', h: esc(c.question), sub: sy ? esc((sy.headline || '').slice(0, 70)) + '…' : '', go: `go('case','${c.id}')` });
+    c.qa.forEach(x => ev.push({ g: 'ask', t: x.at, k: '回答追问', c: 'gray', h: esc(x.a), sub: '问：' + esc(x.q), go: `go('case','${c.id}')` }));
+  });
+  if (!p.plansMigrated) p.plans.forEach(pl => pl.logs.forEach(l => ev.push({ g: 'daily', t: l.date, k: '观察', c: 'amb', h: `${esc(pl.title)}：${pl.items.map(i => esc(i.name) + ' ' + esc(l.values[i.name] ?? '未记录')).join('，')}`, sub: l.note ? esc(l.note) : '', go: "go('obs')" })));
+  // 医生意见类随手记已同步写入 notes，这里不再重复
+  p.events.filter(e => e.type !== '医生意见').forEach(e => ev.push({ g: e.type === '就医' || e.type === '检查' ? 'doc' : 'daily', t: e.date + (e.time && /^\d/.test(e.time) ? 'T' + e.time : ''), k: e.type, c: 'gray', h: esc(e.text), sub: (e.time && !/^\d/.test(e.time) ? esc(e.time) + ' · ' : '') + esc(e.source || '') + (e.quote ? ' · 原话：' + esc(e.quote) : ''), go: "go('obs')" }));
+  [...new Set(p.daily.map(e => e.date))].forEach(d => ev.push({ g: 'daily', t: d, k: '每日记录', c: 'amb', h: dayEntries(p, d).map(e => fdef(e.field, p).name + ' ' + esc(fmtVal(e.field, e.value) || e.text)).join('；'), go: "dDate='" + d + "';go('obs')" }));
+  p.todos.forEach(t => ev.push({ g: 'doctor', t: t.createdAt, k: t.done ? '提醒·已完成' : '提醒', c: 'amb', h: esc(t.text) + (t.due ? '（' + esc(t.due) + '）' : ''), go: "go('home')" }));
+  return ev.sort((a, b) => String(b.t || '').localeCompare(String(a.t || '')));
+}
+function vData(p) {
+  const ev = timelineEvents(p);
+  const shown = tlF === 'all' ? ev : ev.filter(e => e.g === tlF);
+  const facts = [...p.facts].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  const c = coverage(p);
+  const ints = p.cases.filter(x => x.all), last = ints[ints.length - 1];
+  const lv = last && [...last.versions].reverse().find(v => v.synth);
+  const newer = last ? ev.filter(e => String(e.t || '') > last.createdAt).length : ev.length;
+  return `<h2>${esc(p.name)} · 病程与资料</h2>
+  <details class="card" ${c.missing.length ? 'open' : ''}><summary><b>基本信息</b> <span class="muted">${esc([p.sex, p.age ? p.age + ' 岁' : '', p.history ? '既往：' + p.history.slice(0, 14) : '', p.allergies ? '过敏：' + p.allergies : ''].filter(Boolean).join(' · ') || '还没填')}</span></summary>
+    <div class="grid"><div><label class="f">称呼</label><input type="text" id="pf_name" value="${esc(p.name)}"></div>
+    <div class="row" style="flex-wrap:nowrap"><div style="flex:1"><label class="f">年龄</label><input type="number" id="pf_age" value="${esc(p.age)}"></div><div style="flex:1"><label class="f">性别</label><select id="pf_sex">${['', '男', '女'].map(x => `<option ${p.sex === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div></div></div>
+    <label class="f">既往史（慢病、手术等）</label><textarea id="pf_history" style="min-height:56px" placeholder="例：高血压 10 年；2019 年胆囊切除">${esc(p.history)}</textarea>
+    <label class="f">正在用的药（药名、剂量、怎么吃）</label><textarea id="pf_meds" style="min-height:56px">${esc(p.meds)}</textarea>
+    <label class="f">过敏史（没有就写“无”，不知道就空着）</label><input type="text" id="pf_allergies" value="${esc(p.allergies)}">
+    <label class="f">以上信息来自</label><select id="pf_origin">${['家属填写', '医生告知', '病历记载'].map(x => `<option ${p.profileOrigin === x ? 'selected' : ''}>${x}</option>`).join('')}</select>
+    <div style="margin-top:10px"><button class="btn" onclick="saveProfile()">保存</button></div></details>
+
+  <div class="card" style="border-color:var(--pri)"><b>整合分析</b>
+    <div class="muted">把所有报告、医生意见、提问回答和每日记录合在一起，让四个模型重新独立分析一次（之前的 AI 结论不会喂给它们）。</div>
+    ${last ? `<div style="margin-top:8px">${lv ? tagsHtml(lv.synth.tags) + `<div>${esc(lv.synth.headline)}</div>` : '<span class="muted">上次整合未完成</span>'}
+      <div class="muted">上次整合 ${fmt(last.createdAt)}${newer ? ` · 之后新增 ${newer} 条内容` : ' · 之后没有新内容'}</div>
+      <button class="btn ghost sm" style="margin-top:6px" onclick="go('case','${last.id}')">查看完整结果</button></div>` : ''}
+    <textarea id="epQ" style="margin-top:8px;min-height:56px">${esc(EP_Q)}</textarea>
+    <button class="btn" style="margin-top:8px" onclick="startCase('records', val('epQ') || EP_Q, { all: true })">${last ? '用最新内容重新整合' : '开始整合分析'}</button></div>
+
+  <details class="card"><summary><b>＋ 添加报告 / 病历 / 医生意见</b> <span class="muted">拍照或粘贴，AI 提取后你核对</span></summary>
+    <div class="row" style="margin-top:8px"><label class="btn ghost" style="display:inline-block">📷 拍照/选图<input type="file" accept="image/*" id="docImg" class="hide" onchange="pickImg(this)"></label><span id="imgName" class="muted"></span></div>
+    <label class="f">或粘贴文字</label><textarea id="docText" placeholder="把化验单、出院小结、处方的文字粘贴在这里"></textarea>
+    <label class="f">资料来源</label><select id="docOrigin"><option>报告</option><option>医生意见</option><option>家属转述</option></select>
+    <div style="margin-top:8px"><button class="btn" id="exBtn" onclick="extract()">提取关键项</button></div>
+    <div id="exOut"></div>
+    <h3>只记一句医生意见 / 家属转述</h3>
+    <div class="row" style="flex-wrap:nowrap"><select id="nOrigin" style="width:auto"><option>医生意见</option><option>家属转述</option></select><input type="date" id="nDate" value="${today()}" style="width:auto"></div>
+    <textarea id="nText" style="min-height:56px;margin-top:6px" placeholder="例：心内科王医生说 3 个月后复查心脏彩超"></textarea>
+    <div class="row" style="margin-top:6px"><button class="btn sm" onclick="addNote()">添加</button><button class="btn ghost sm" onclick="voice('nText')">🎤</button></div></details>
+
+  <h2>时间线（${shown.length}）</h2>
+  <div class="row" style="margin-bottom:6px">${Object.entries(TL_F).map(([k, t]) => `<button class="chip" style="${tlF === k ? 'border-color:var(--pri);color:var(--pri);font-weight:600' : ''}" onclick="tlF='${k}';render()">${t}</button>`).join('')}</div>
+  ${shown.length ? shown.map(e => `<div class="card" style="${e.go ? 'cursor:pointer;' : ''}padding:10px 14px" ${e.go ? `onclick="${e.go}"` : ''}><div><span class="tag ${e.c}">${esc(e.k)}</span><span class="muted">${esc(String(e.t || '').includes('T') ? fmt(e.t) : (e.t || '日期未知'))}</span></div><div>${e.h}</div>${e.sub ? `<div class="muted">${e.sub}</div>` : ''}</div>`).join('') : '<div class="muted">这一类还没有内容。</div>'}
+
+  <details class="card"><summary><b>医生意见 / 家属转述（${p.notes.length}）</b></summary>
+    ${p.notes.slice().reverse().map(n => `<div class="item"><span class="tag ${n.origin === '医生意见' ? 'blue' : 'gray'}">${esc(n.origin)}</span><div class="grow">${esc(n.text)}<div class="muted">${esc(n.no || '')} · ${esc(n.date)}</div></div><button class="btn ghost sm" onclick="delNote('${n.id}')">删</button></div>`).join('') || '<div class="muted">还没有</div>'}</details>
+  <details class="card"><summary><b>检验检查关键项（${facts.length}）</b> <span class="muted">可逐项核对、修改</span></summary>
+    ${facts.length ? facts.map(f => factRow(f, p)).join('') : '<div class="muted">还没有</div>'}</details>
+  <details class="card"><summary><b>原始资料（${p.docs.length}）</b> <span class="muted">报告照片和原文</span></summary>
+    ${p.docs.slice().reverse().map(d => `<div class="item"><div class="grow" style="cursor:pointer" onclick="openDoc('${d.id}')">${esc(d.no)} ${esc(d.title)} <span class="muted">${esc(d.date || '')} · ${esc(d.origin)}</span></div></div>`).join('') || '<div class="muted">还没有</div>'}</details>
+
+  <div class="card"><b>同步与备份</b>
+    <div class="muted">资料存在这台设备的浏览器里${SY.code ? '，并已开启加密同步' : ''}。<span id="usage"></span>换设备或清缓存前请先导出。</div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" onclick="openSync()">${SY.code ? '同步设置' : '开启手机和电脑同步'}</button><button class="btn ghost sm" onclick="exportData()">导出备份</button><label class="btn ghost sm">导入备份<input type="file" accept=".json" class="hide" onchange="importData(this)"></label><button class="btn ghost sm" style="color:var(--red)" onclick="delPatient()">删除 ${esc(p.name)} 的全部资料</button></div></div>`;
+}
+function openDoc(id) {
+  const p = P(); const d = p.docs.find(x => x.id === id); if (!d) return;
+  const fs = p.facts.filter(f => f.docId === id);
+  sheet(`<h3>${esc(d.no)} ${esc(d.title)}</h3><div class="muted">${esc(d.date || '日期未知')} · 来源：${esc(d.source || '未知')} · ${esc(d.origin)} · 导入 ${fmt(d.addedAt)}</div>
+    ${d.img || d.imgId ? `<img ${d.img ? `src="${d.img}"` : `data-img="${d.imgId}"`} style="max-width:100%;border-radius:8px;margin-top:8px">` : ''}
+    ${fs.length ? `<h3>关键项（${fs.length}）</h3>${fs.map(f => factRow(f, p)).join('')}` : ''}
+    ${d.text ? `<details><summary>原文</summary><pre style="white-space:pre-wrap;font-size:.85rem">${esc(d.text)}</pre></details>` : ''}
+    <div class="row" style="margin-top:10px"><button class="btn ghost" onclick="closeSheet()">关闭</button><button class="btn ghost sm" style="color:var(--red)" onclick="closeSheet();delDoc('${d.id}')">删除这份资料</button></div>`);
+  loadImgs();
+}
+
+// ============ 就医摘要 ============
+function vSum(p) {
+  const conf = p.facts.filter(f => f.status === '已核对').sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  const pend = p.facts.filter(f => f.status !== '已核对');
+  const recent = [...p.cases].reverse().filter(c => c.versions.some(v => v.synth)).slice(0, 3);
+  const c = coverage(p);
+  return `<div class="row noprint" style="margin-top:12px"><button class="btn" onclick="window.print()">打印 / 存为 PDF</button><button class="btn ghost" onclick="copy(document.getElementById('sumBody').innerText)">复制文字</button></div>
+  <div class="card" id="sumBody"><h2 style="margin-top:0">就医沟通摘要 · ${esc(p.name)}</h2>
+  <div class="muted">${new Date().toLocaleString('zh-CN')} 由家属整理。AI 分析部分仅供参考，请医生判断。</div>
+  <h3>基本情况</h3><div>${esc(p.sex || '性别未填')}，${p.age ? esc(p.age) + ' 岁' : '年龄未填'}（${esc(p.profileOrigin)}）</div>
+  <div>既往史：${esc(p.history || '未填写')}</div><div>正在用药：${esc(p.meds || '未填写')}</div><div>过敏史：${esc(p.allergies || '未填写')}</div>
+  ${p.notes.length ? `<h3>医生意见 / 家属转述</h3><ul>${p.notes.slice(-6).map(n => `<li>[${esc(n.origin)} ${esc(n.date)}] ${esc(n.text)}</li>`).join('')}</ul>` : ''}
+  ${conf.length ? `<h3>已核对的关键资料</h3><table>${conf.slice(0, 20).map(f => `<tr><td>${esc(f.date || '')}</td><td>${esc(f.name)}</td><td>${esc(f.value)}${esc(f.unit || '')}${f.flag ? ' ' + esc(f.flag) : ''}</td><td class="muted">${esc(f.ref || '')}</td></tr>`).join('')}</table>` : ''}
+  ${pend.length ? `<div class="muted">另有 ${pend.length} 项未核对或识别不清，未列入。</div>` : ''}
+  ${p.daily.length ? `<h3>每日记录（近 7 天）</h3><div style="overflow-x:auto"><table><tr><th>日期</th>${allFields(p).map(f => `<th>${esc(fdef(f, p).name)}</th>`).join('')}</tr>${[6, 5, 4, 3, 2, 1, 0].map(i => addDays(today(), -i)).map(d => `<tr><td>${d.slice(5)}</td>${allFields(p).map(f => `<td>${dayEntries(p, d, f).map(e => esc((e.time ? e.time + ' ' : '') + (fmtVal(f, e.value) || e.text))).join('<br>') || '—'}</td>`).join('')}</tr>`).join('')}</table></div><div class="muted">「—」表示没有记录，不代表没有发生。</div>` : ''}
+  ${p.events.length ? `<h3>家属记录（症状、用药、就医）</h3><ul>${[...p.events].sort((a, b) => (a.date + a.at).localeCompare(b.date + b.at)).slice(-15).map(e => `<li>${esc(e.date.slice(5))} ${esc(e.time || '')} [${esc(e.type)}] ${esc(e.text)}</li>`).join('')}</ul>` : ''}
+  ${p.todos.filter(t => !t.done).length ? `<h3>待办 / 复诊</h3><ul>${p.todos.filter(t => !t.done).map(t => `<li>${esc(t.text)}${t.due ? '（' + esc(t.due) + '）' : ''}</li>`).join('')}</ul>` : ''}
+  ${(p.plansMigrated ? [] : p.plans).map(pl => `<h3>观察记录：${esc(pl.title)}</h3><div class="muted">自 ${pl.start} 起 ${daysBetween(pl.start, today()) + 1} 天，记录 ${new Set(pl.logs.map(l => l.date)).size} 天</div>
+    <table><tr><th>日期</th>${pl.items.map(i => `<th>${esc(i.name)}</th>`).join('')}</tr>${pl.logs.slice(-10).map(l => `<tr><td>${l.date.slice(5)}</td>${pl.items.map(i => `<td>${esc(l.values[i.name] ?? '未记录')}</td>`).join('')}</tr>`).join('')}</table>`).join('')}
+  ${recent.map(cs => { const v = [...cs.versions].reverse().find(x => x.synth); const sy = v.synth; return `<h3>家属关心的问题：${esc(cs.question)}</h3>
+    ${sy.doctor_summary ? `<div>${esc(sy.doctor_summary)}</div>` : ''}${arr(sy.verify_list).length ? `<div><b>想请医生确认：</b></div><ul>${arr(sy.verify_list).map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+    <div class="muted">（AI 推断，${v.answers.length} 个模型参与，${fmt(v.at)}）</div>`; }).join('')}
+  <div class="muted" style="margin-top:12px">资料覆盖：${c.docs} 份，最近 ${esc(c.latest || '无')}；缺失：${esc(c.missing.join('、') || '无')}</div></div>`;
+}
+
+// ============ 患者 ============
+function openPatients() {
+  sheet(`<h3>切换家人</h3>${S.patients.map(p => `<div class="item"><div class="grow"><b>${esc(p.name)}</b> <span class="muted">${p.docs.length} 份资料 · ${p.cases.length} 个问题</span></div>${p.id === S.cur ? '<span class="tag">当前</span>' : `<button class="btn sm" onclick="S.cur='${p.id}';save();closeSheet();go('home')">切换</button>`}</div>`).join('')}
+  <div class="row" style="margin-top:10px;flex-wrap:nowrap"><input type="text" id="newPat" placeholder="例：爸爸、妈妈、奶奶"><button class="btn" onclick="addPatient()">添加</button></div>`);
+}
+function addPatient() { const n = val('newPat'); if (!n) return; const p = newPatient(n); S.patients.push(p); S.cur = p.id; save(); closeSheet(); go('data'); }
+function delPatient() {
+  const p = P(); if (prompt(`删除后无法恢复。输入「${p.name}」确认删除全部资料：`) !== p.name) return;
+  if (DB) p.docs.forEach(d => d.imgId && idbDel('img', d.imgId));
+  S.patients = S.patients.filter(x => x.id !== p.id); if (!S.patients.length) S.patients.push(newPatient('家人')); S.cur = S.patients[0].id; save(); go('home');
+}
+async function exportData() {
+  // 备份文件里带上图片，换设备也能完整导入
+  const out = JSON.parse(JSON.stringify(S));
+  for (const p of out.patients) for (const d of p.docs) if (d.imgId && DB) { d.img = await idbGet('img', d.imgId).catch(() => null); delete d.imgId; }
+  const b = new Blob([JSON.stringify(out)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `家人健康簿备份_${today()}.json`; a.click();
+}
+function mergePatient(a, b) {
+  // 同一条记录两边都有时，保留内容更多的那份（版本多、记录多）
+  const m = { ...a };
+  for (const k of ['name', 'age', 'sex', 'history', 'meds', 'allergies']) if (!m[k] && b[k]) m[k] = b[k];
+  for (const k of ['docs', 'facts', 'notes', 'plans', 'cases', 'daily', 'events', 'todos', 'voice', 'customFields', 'watch']) {
+    const map = new Map((a[k] || []).map(x => [x.id, x]));
+    for (const x of b[k] || []) { const y = map.get(x.id); if (!y || JSON.stringify(x).length > JSON.stringify(y).length) map.set(x.id, x); }
+    m[k] = [...map.values()];
+  }
+  m.seq = Math.max(a.seq || 0, b.seq || 0);
+  return m;
+}
+function importData(inp) {
+  const f = inp.files[0]; if (!f) return;
+  f.text().then(async t => {
+    const d = JSON.parse(t); if (!d.patients) throw 0;
+    const same = d.patients.filter(p => S.patients.some(x => x.id === p.id)).length;
+    if (!confirm(`导入 ${d.patients.length} 位家人的资料？${same ? `其中 ${same} 位这里已有，会合并：只补上缺的内容，不删除这里已有的。` : ''}`)) return;
+    await moveImgs(d);
+    for (const p of d.patients) { const i = S.patients.findIndex(x => x.id === p.id); if (i >= 0) S.patients[i] = mergePatient(S.patients[i], p); else S.patients.push(p); }
+    S.cur = d.cur && S.patients.some(x => x.id === d.cur) ? d.cur : S.cur;
+    save(); go('home'); toast('已导入');
+  }).catch(() => alert('文件不对，请选择从这里导出的备份'));
+}
+
+// ============ 多设备同步：同步码 + 端到端加密（服务器只存密文） ============
+const ARR_KEYS = ['docs', 'facts', 'notes', 'plans', 'cases', 'daily', 'events', 'todos', 'voice', 'customFields', 'watch'];
+const P_KEYS = ['name', 'age', 'sex', 'history', 'meds', 'allergies', 'profileOrigin'];
+let SHADOW = new Map();   // 上次保存时每条记录的样子，用来发现改动和删除
+let SY = { code: '', v: 0, dirty: false, imgs: [], last: '' };
+let SYK = null;           // { vid, key }
+let syncTimer = null, syncBusy = false, syncErr = '';
+try { SY = { ...SY, ...JSON.parse(localStorage.getItem('hb.sync') || '{}') }; } catch (e) { }
+function saveSY() { try { localStorage.setItem('hb.sync', JSON.stringify(SY)); } catch (e) { } }
+
+const strip = o => { const { u, ...r } = o; return JSON.stringify(r); };
+function pScalars(p) { return JSON.stringify(P_KEYS.map(k => p[k] ?? '')); }
+function stamp() {
+  // 改过的条目打上时间 u；不见了的条目记入删除标记 S.tomb
+  const t = Date.now(), seen = new Map();
+  S.tomb = S.tomb || {};
+  for (const p of S.patients) {
+    const pk = 'P:' + p.id, ps = pScalars(p);
+    if (SHADOW.has(pk) && SHADOW.get(pk) !== ps) p.u = t;
+    seen.set(pk, ps);
+    for (const k of ARR_KEYS) for (const it of p[k] || []) {
+      const key = p.id + ':' + k + ':' + it.id, s = strip(it);
+      if (SHADOW.size && SHADOW.get(key) !== s) it.u = t;
+      seen.set(key, s);
+    }
+  }
+  for (const key of SHADOW.keys()) if (!seen.has(key)) S.tomb[key.split(':').pop()] = t;
+  SHADOW = seen;
+}
+function resetShadow() { SHADOW = new Map(); stamp(); }
+
+function newer(a, b) { return (b.u || 0) > (a.u || 0) || ((b.u || 0) === (a.u || 0) && JSON.stringify(b).length > JSON.stringify(a).length); }
+function mergeState(L, R) {
+  const tomb = { ...(L.tomb || {}) };
+  for (const [k, t] of Object.entries(R.tomb || {})) tomb[k] = Math.max(tomb[k] || 0, t);
+  const pm = new Map();
+  for (const p of [...L.patients, ...R.patients]) {
+    if (tomb[p.id]) continue;
+    const a = pm.get(p.id);
+    if (!a) { pm.set(p.id, JSON.parse(JSON.stringify(p))); continue; }
+    const m = newer(a, p) && (p.u || 0) > (a.u || 0) ? { ...a, ...Object.fromEntries(P_KEYS.map(k => [k, p[k]])), u: p.u } : a;
+    for (const k of ARR_KEYS) {
+      const map = new Map((a[k] || []).map(x => [x.id, x]));
+      for (const x of p[k] || []) { const y = map.get(x.id); if (!y || newer(y, x)) map.set(x.id, x); }
+      m[k] = [...map.values()].filter(x => !tomb[x.id]);
+    }
+    m.seq = Math.max(a.seq || 0, p.seq || 0);
+    pm.set(p.id, m);
+  }
+  for (const m of pm.values()) for (const k of ARR_KEYS) m[k] = (m[k] || []).filter(x => !tomb[x.id]);
+  return { ...L, patients: [...pm.values()], tomb };
+}
+
+// ---- 加密 ----
+const b64 = buf => { const u = new Uint8Array(buf); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000)); return btoa(s); };
+const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function keysFor(code) {
+  const enc = new TextEncoder();
+  const vid = [...new Uint8Array(await crypto.subtle.digest('SHA-256', enc.encode('hb-vault:' + code)))].map(x => x.toString(16).padStart(2, '0')).join('');
+  const base = await crypto.subtle.importKey('raw', enc.encode(code), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: enc.encode('family-health-sync-v1'), iterations: 150000, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+  return { vid, key };
+}
+async function zip(str) {
+  const bytes = new TextEncoder().encode(str);
+  if (!window.CompressionStream) return { z: 0, bytes };
+  return { z: 1, bytes: new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer()) };
+}
+async function unzip(bytes, z) {
+  if (!z) return new TextDecoder().decode(bytes);
+  return new TextDecoder().decode(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
+}
+async function seal(str) {
+  const { z, bytes } = await zip(str);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, SYK.key, bytes);
+  return { iv: z + ':' + b64(iv), data: b64(ct) };
+}
+async function open_(r) {
+  const [z, ivs] = String(r.iv).split(':');
+  const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(ivs) }, SYK.key, unb64(r.data));
+  return unzip(new Uint8Array(pt), z === '1');
+}
+const packState = () => JSON.stringify({ patients: S.patients, tomb: S.tomb || {} });
+
+// ---- 同步主流程 ----
+function syncSoon() { if (!SY.code) return; clearTimeout(syncTimer); syncTimer = setTimeout(() => syncNow(), 2500); }
+async function syncNow(manual) {
+  if (!SY.code || syncBusy) return;
+  if (!navigator.onLine) { syncErr = '没联网'; paintSync(); return; }
+  syncBusy = true; syncErr = ''; paintSync();
+  try {
+    SYK = SYK || await keysFor(SY.code);
+    for (let round = 0; round < 3; round++) {
+      const r = await fetch('/api/vault/' + SYK.vid).then(x => x.json());
+      let changed = false;
+      if (r.v && r.v !== SY.v) {
+        const remote = JSON.parse(await open_(r));
+        const before = packState();
+        S = mergeState(S, remote);
+        for (const p of S.patients) { for (const k of ['customFields', 'watch']) p[k] = p[k] || []; if (!p.plansMigrated) migratePlans(p); moveOtherEvents(p); }
+        if (!S.patients.find(p => p.id === S.cur)) S.cur = S.patients[0]?.id;
+        resetShadow(); persist();
+        changed = packState() !== before;
+        if (changed) { render(); }
+        SY.v = r.v;
+        if (packState() !== JSON.stringify({ patients: remote.patients, tomb: remote.tomb || {} })) SY.dirty = true;
+      }
+      if (!r.v) SY.dirty = true;
+      if (!SY.dirty) break;
+      const sealed = await seal(packState());
+      const w = await fetch('/api/vault/' + SYK.vid, { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ baseV: r.v || 0, ...sealed }) });
+      const wj = await w.json().catch(() => ({}));
+      if (w.status === 409) continue;          // 别的设备刚写过：再拉一次合并
+      if (!wj.ok) throw new Error(wj.error || '上传失败');
+      SY.v = wj.v; SY.dirty = false; break;
+    }
+    SY.last = now(); saveSY();
+    syncImgs();
+    if (manual) toast('已同步');
+  } catch (e) { syncErr = e.message === 'The operation failed for an operation-specific reason' ? '同步码不对，解不开云端资料' : (e.message || '同步失败'); }
+  syncBusy = false; paintSync();
+}
+async function syncImgs() {
+  if (!DB || !SYK) return;
+  const ids = S.patients.flatMap(p => p.docs.filter(d => d.imgId).map(d => d.imgId));
+  for (const id of ids) {
+    try {
+      const local = await idbGet('img', id);
+      if (local && !SY.imgs.includes(id)) {
+        const sealed = await seal(local);
+        const w = await fetch(`/api/vault/${SYK.vid}/blob/${id}`, { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify(sealed) });
+        if (w.ok) { SY.imgs.push(id); saveSY(); }
+      } else if (!local) {
+        const r = await fetch(`/api/vault/${SYK.vid}/blob/${id}`);
+        if (r.ok) { await idbPut('img', id, await open_(await r.json())); SY.imgs.push(id); saveSY(); loadImgs(); }
+      }
+    } catch (e) { }
+  }
+}
+function paintSync() {
+  const el = document.getElementById('syncChip'); if (!el) return;
+  el.textContent = !SY.code ? '☁ 同步' : syncBusy ? '☁ 同步中…' : syncErr ? '☁ 同步失败' : '☁ 已同步';
+  el.style.color = syncErr ? 'var(--red)' : SY.code ? 'var(--pri)' : '';
+}
+
+// ---- 开启 / 加入 / 关闭 ----
+function newCode() {
+  const A = 'abcdefghjkmnpqrstuvwxyz23456789', r = crypto.getRandomValues(new Uint8Array(16));
+  return [...r].map(x => A[x % A.length]).join('').replace(/(.{4})(?=.)/g, '$1-');
+}
+const normCode = c => String(c || '').toLowerCase().replace(/[^a-z0-9]/g, '').replace(/(.{4})(?=.)/g, '$1-');
+const syncLink = () => location.origin + '/#sync=' + SY.code;
+function openSync() {
+  if (!SY.code) return sheet(`<h3>手机和电脑同步</h3>
+    <div class="muted">开启后，资料会先在这台设备上<b>加密</b>，再存到云端；服务器上只有乱码，看不到内容。同步码就是钥匙，只发给自己或家人。</div>
+    <div class="card"><b>第一台设备（资料最全的那台，通常是手机）</b><div class="muted">生成同步码，把这台设备的资料加密上传。</div><button class="btn" style="margin-top:8px" onclick="enableSync()">开启同步</button></div>
+    <div class="card"><b>已经在别的设备开过了</b><div class="muted">直接打开那台设备发来的同步链接；或者输入同步码。</div>
+      <input type="text" id="joinCode" placeholder="xxxx-xxxx-xxxx-xxxx" style="margin-top:8px"><button class="btn ghost" style="margin-top:8px" onclick="askJoin(val('joinCode'))">加入</button></div>
+    <button class="btn ghost" onclick="closeSheet()">关闭</button>`);
+  sheet(`<h3>同步已开启</h3>
+    <div>状态：<b>${syncBusy ? '同步中…' : syncErr ? '失败：' + esc(syncErr) : '已同步'}</b>${SY.last ? `<span class="muted">（上次 ${fmt(SY.last)}）</span>` : ''}</div>
+    <div class="muted" style="margin-top:6px">每次保存后自动同步；打开网页、切回网页时也会同步。</div>
+    <div class="card"><b>让另一台设备加入</b><div class="muted">把下面的链接用微信发到电脑（或家人手机）上打开即可。链接里含钥匙，<b>不要发给外人</b>。</div>
+      <div class="quote" style="margin:8px 0;word-break:break-all">${esc(syncLink())}</div>
+      <div class="row"><button class="btn" onclick="copy(syncLink())">复制同步链接</button><span class="muted">同步码：${esc(SY.code)}</span></div></div>
+    <div class="row"><button class="btn ghost" onclick="syncNow(true);closeSheet()">立即同步</button><button class="btn ghost" onclick="disableSync()">在这台设备上关闭同步</button><button class="btn ghost" onclick="closeSheet()">关闭</button></div>`);
+}
+async function enableSync() {
+  SY = { code: newCode(), v: 0, dirty: true, imgs: [], last: '' }; SYK = null; saveSY();
+  closeSheet(); await syncNow(); openSync();
+}
+function localSize() { return S.patients.reduce((n, p) => n + ARR_KEYS.reduce((m, k) => m + (p[k] || []).length, 0), 0); }
+function askJoin(code) {
+  code = normCode(code);
+  if (code.replace(/-/g, '').length < 16) return alert('同步码不完整');
+  const n = localSize();
+  if (!n) return joinSync(code, 'merge');
+  sheet(`<h3>加入同步</h3><div>这台设备上已经有 ${S.patients.length} 位家人、${n} 条资料。加入后：</div>
+    <div class="card"><b>合并（推荐）</b><div class="muted">两边的资料都保留。如果同一个人在两台设备上分别建过，会出现两个同名家人，之后可以删掉多余的。</div><button class="btn" style="margin-top:6px" onclick="joinSync('${code}','merge')">合并</button></div>
+    <div class="card"><b>用云端资料替换这台设备</b><div class="muted">会先自动下载一份本机备份，再换成云端的资料。</div><button class="btn ghost" style="margin-top:6px" onclick="joinSync('${code}','replace')">替换</button></div>
+    <button class="btn ghost" onclick="closeSheet()">取消</button>`);
+}
+async function joinSync(code, mode) {
+  closeSheet();
+  SY = { code, v: 0, dirty: false, imgs: [], last: '' }; SYK = await keysFor(code);
+  const r = await fetch('/api/vault/' + SYK.vid).then(x => x.json()).catch(() => ({}));
+  if (!r.v) { if (!confirm('云端还没有这个同步码的资料（可能码输错了）。要用它开启新的同步吗？')) { SY = { code: '' }; SYK = null; saveSY(); return; } }
+  else {
+    let remote;
+    try { remote = JSON.parse(await open_(r)); } catch (e) { SY = { code: '' }; SYK = null; saveSY(); return alert('同步码不对，解不开云端资料。'); }
+    if (mode === 'replace') { await exportData(); S = { ...S, patients: remote.patients, tomb: remote.tomb || {} }; }
+    else S = mergeState(S, remote);
+    if (!S.patients.find(p => p.id === S.cur)) S.cur = S.patients[0]?.id;
+    SY.v = r.v; resetShadow(); persist(); render();
+  }
+  SY.dirty = true; saveSY();
+  await syncNow(); toast('已加入同步'); openSync();
+}
+function disableSync() {
+  if (!confirm('在这台设备上关闭同步？本机资料保留，云端资料也保留，其他设备不受影响。')) return;
+  SY = { code: '', v: 0, dirty: false, imgs: [], last: '' }; SYK = null; saveSY(); closeSheet(); paintSync();
+}
+function checkSyncLink() {
+  const m = location.hash.match(/sync=([a-z0-9-]+)/i);
+  if (!m) return;
+  history.replaceState(null, '', location.pathname);
+  if (SY.code === normCode(m[1])) return toast('这台设备已经在同步了');
+  if (SY.code && !confirm('这台设备已经用另一个同步码在同步，要换成新的吗？')) return;
+  askJoin(m[1]);
+}
+window.addEventListener('online', () => syncNow());
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') syncNow(); });
+setInterval(() => { if (document.visibilityState === 'visible') syncNow(); }, 60000);
+
+// ============ 小工具 ============
+function sheet(html) { document.getElementById('modal').innerHTML = `<div class="modal" onclick="if(event.target===this)closeSheet()"><div class="sheet">${html}</div></div>`; }
+function closeSheet() { document.getElementById('modal').innerHTML = ''; }
+function toast(t) { const d = document.createElement('div'); d.textContent = t; d.style.cssText = 'position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#1c2321;color:#fff;padding:8px 14px;border-radius:10px;z-index:99;max-width:90vw'; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }
+function copy(t) { navigator.clipboard?.writeText(t).then(() => toast('已复制'), () => prompt('复制下面的文字：', t)); }
+function toggleBig() { document.body.classList.toggle('big'); try { localStorage.setItem('hb.big', document.body.classList.contains('big') ? '1' : ''); } catch (e) { } }
+function voice(id) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return toast('这个浏览器不支持网页语音，请用输入法键盘上的🎤语音输入');
+  const r = new SR(); r.lang = 'zh-CN'; r.interimResults = false;
+  const el = document.getElementById(id); toast('请说话…');
+  r.onresult = e => { el.value += e.results[0][0].transcript; };
+  r.onerror = () => toast('没听清，可以用输入法的语音键');
+  r.start();
+}
+
+try { if (localStorage.getItem('hb.big')) document.body.classList.add('big'); } catch (e) { }
+load().then(() => { resetShadow(); let mig = 0; for (const p of S.patients) { if (!p.plansMigrated) { migratePlans(p); mig++; } mig += moveOtherEvents(p); } if (mig) save(); render(); paintSync(); checkSyncLink(); syncNow(); });
+</script>
+</body>
+</html>
