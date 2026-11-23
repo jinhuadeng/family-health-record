@@ -12,10 +12,10 @@
 
 <table>
 <tr>
-<td align="center"><img src="docs/screenshots/home.jpg" width="200" alt="首页"><br>首页：按住说话就能记</td>
-<td align="center"><img src="docs/screenshots/organize.jpg" width="200" alt="自动整理"><br>一段话自动拆成多条记录</td>
-<td align="center"><img src="docs/screenshots/timeline.jpg" width="200" alt="病程时间线"><br>病程时间线</td>
-<td align="center"><img src="docs/screenshots/summary.jpg" width="200" alt="就医摘要"><br>一键生成就医摘要</td>
+<td align="center"><img src="https://health.xiaowen.ai/screenshots/home.jpg" width="200" alt="首页"><br>首页：按住说话就能记</td>
+<td align="center"><img src="https://health.xiaowen.ai/screenshots/organize.jpg" width="200" alt="自动整理"><br>一段话自动拆成多条记录</td>
+<td align="center"><img src="https://health.xiaowen.ai/screenshots/timeline.jpg" width="200" alt="病程时间线"><br>病程时间线</td>
+<td align="center"><img src="https://health.xiaowen.ai/screenshots/summary.jpg" width="200" alt="就医摘要"><br>一键生成就医摘要</td>
 </tr>
 </table>
 
